@@ -1,22 +1,3 @@
--- URL do script original
-local scriptUrl = "https://raw.githubusercontent.com/realredz/BloxFruits/main/Farm.lua"
-
--- Função para carregar o script do GitHub
-local function loadScript(url)
-    local success, result = pcall(function()
-        return game:HttpGet(url)
-    end)
-
-    if success then
-        loadstring(result)()  -- Carrega e executa o script
-    else
-        warn("Erro ao carregar o script: " .. result)
-    end
-end
-
--- Chama a função para carregar o script
-loadScript(scriptUrl)
-
 -- Função de depuração para verificar se tudo está funcionando
 local function debugMessage(message)
     print("[DEBUG] " .. message)
@@ -28,6 +9,8 @@ getgenv().Auto_Quest = true
 getgenv().Anti_Ban = true
 getgenv().Auto_AFK = true
 getgenv().Infinite_Health = true
+getgenv().Auto_Stats = true
+getgenv().Farm_Level = 100
 
 -- Função Anti-AFK
 local function antiAFK()
@@ -47,11 +30,17 @@ local function autoFarm()
     spawn(function()
         while getgenv().Auto_Farm do
             debugMessage("Iniciando Auto-Farm...")  -- Depuração
-            -- Simulando a coleta de recursos, você pode substituir com a lógica de coleta real
-            for _, item in pairs(game.Workspace:GetChildren()) do
-                if item:IsA("Model") and item:FindFirstChild("HumanoidRootPart") then
-                    debugMessage("Item encontrado: " .. item.Name)  -- Depuração
-                    -- Coletando o item ou interagindo com ele (adicione sua lógica aqui)
+            local player = game.Players.LocalPlayer
+            local targetLevel = getgenv().Farm_Level
+            -- Simulando a coleta de recursos ou ataques a inimigos
+            for _, enemy in pairs(game.Workspace:GetChildren()) do
+                if enemy:IsA("Model") and enemy:FindFirstChild("Humanoid") then
+                    local level = enemy:FindFirstChild("Level")
+                    if level and tonumber(level.Value) >= targetLevel then
+                        debugMessage("Inimigo encontrado: " .. enemy.Name)  -- Depuração
+                        -- Lógica para atacar o inimigo
+                        -- Adicione sua lógica de combate aqui
+                    end
                 end
             end
             wait(2)  -- Aguarda 2 segundos antes de tentar novamente
@@ -59,12 +48,11 @@ local function autoFarm()
     end)
 end
 
--- Função de Auto-Quest (simula a aceitação e conclusão de missões)
+-- Função de Auto-Quest
 local function autoQuest()
     spawn(function()
         while getgenv().Auto_Quest do
             debugMessage("Iniciando Auto-Quest...")  -- Depuração
-            -- Substitua esta lógica para aceitar e completar quests reais no seu jogo
             local quests = game.Workspace:FindFirstChild("Quests")
             if quests then
                 debugMessage("Iniciando a primeira quest...")
@@ -102,6 +90,26 @@ local function antiBan()
     end)
 end
 
+-- Função de Auto-Stats (Distribui pontos automaticamente em Blox Fruits)
+local function autoStats()
+    spawn(function()
+        while getgenv().Auto_Stats do
+            debugMessage("Distribuindo pontos de stats automaticamente...")  -- Depuração
+            local player = game.Players.LocalPlayer
+            local stats = player:FindFirstChild("Stats")
+            if stats then
+                -- Exemplo de distribuição de pontos, ajustando de acordo com o que o script permite
+                stats.Strength.Value = stats.Strength.Value + 1
+                stats.Stamina.Value = stats.Stamina.Value + 1
+                stats.Defense.Value = stats.Defense.Value + 1
+                stats.Sword.Value = stats.Sword.Value + 1
+                debugMessage("Pontos de stats distribuídos!")
+            end
+            wait(10)  -- Ajusta a cada 10 segundos
+        end
+    end)
+end
+
 -- Função para carregar o script e as funções adicionais
 local function loadAndActivateScript()
     debugMessage("Iniciando script...")  -- Depuração
@@ -112,6 +120,7 @@ local function loadAndActivateScript()
     autoQuest()
     infiniteHealth()
     antiBan()
+    autoStats()
 
     debugMessage("Script iniciado e funções básicas ativadas!")  -- Depuração
 end
