@@ -1,10 +1,27 @@
--- Configurações Gerais
-getgenv().Auto_Farm = true
-getgenv().Auto_Quest = true
-getgenv().Farm_Dragon_Race = true
-getgenv().Auto_Upgrade_Stats = true
+-- Biblioteca de GUI
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+local Window = Library.CreateLib("Blox Fruits Script", "DarkTheme")
 
--- Função para imprimir mensagens de depuração
+-- Seções do Menu
+local FarmTab = Window:NewTab("Farm")
+local FarmSection = FarmTab:NewSection("Farm Options")
+
+local StatsTab = Window:NewTab("Stats")
+local StatsSection = StatsTab:NewSection("Auto Upgrade")
+
+local SettingsTab = Window:NewTab("Settings")
+local SettingsSection = SettingsTab:NewSection("General Settings")
+
+-- Configurações Gerais
+getgenv().Auto_Farm = false
+getgenv().Auto_Quest = false
+getgenv().Farm_Dragon_Race = false
+getgenv().Auto_Upgrade_Stats = false
+getgenv().Auto_Buso = false
+getgenv().Auto_Instinto = false
+getgenv().Auto_Click = true
+
+-- Função de Depuração
 local function debugMessage(message)
     print("[DEBUG] " .. message)
 end
@@ -39,12 +56,12 @@ local function autoFarm()
             local currentIsland = getCurrentIsland()
             debugMessage("Farmando em: " .. currentIsland)
 
-            -- Encontrar e atacar inimigos na ilha atual
+            -- Localiza NPCs e ataca automaticamente
             for _, enemy in pairs(game.Workspace.Enemies:GetChildren()) do
                 if enemy:IsA("Model") and enemy:FindFirstChild("Humanoid") then
                     if enemy.Humanoid.Health > 0 then
-                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = enemy.HumanoidRootPart.CFrame
-                        wait(0.5)
+                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = enemy.HumanoidRootPart.CFrame + Vector3.new(0, 15, 0)
+                        wait(0.2)
                         debugMessage("Atacando inimigo: " .. enemy.Name)
                     end
                 end
@@ -70,43 +87,79 @@ local function autoQuest()
     end)
 end
 
--- Farmar Raça Dragão
-local function farmDragonRace()
+-- Função para Auto Busoshoku Haki
+local function autoBuso()
     spawn(function()
-        while getgenv().Farm_Dragon_Race do
-            local dragonTrainer = game.Workspace:FindFirstChild("DragonTrainer")
-            if dragonTrainer then
-                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = dragonTrainer.HumanoidRootPart.CFrame
-                dragonTrainer:FireServer("Train")
-                debugMessage("Treinando Raça Dragão...")
-            end
-            wait(10)
-        end
-    end)
-end
-
--- Auto Upgrade de Atributos
-local function autoUpgradeStats()
-    spawn(function()
-        while getgenv().Auto_Upgrade_Stats do
-            local stats = {"Melee", "Defense", "Sword", "Gun"}
-            for _, stat in ipairs(stats) do
-                game.ReplicatedStorage.UpgradeStat:FireServer(stat, 5)
-                debugMessage("Aumentando: " .. stat)
+        while getgenv().Auto_Buso do
+            local character = game.Players.LocalPlayer.Character
+            if character and character:FindFirstChild("Busoshoku") == nil then
+                game.ReplicatedStorage.Events.Haki:FireServer("Busoshoku")
+                debugMessage("Ativando Busoshoku Haki...")
             end
             wait(3)
         end
     end)
 end
 
--- Inicializar Script
-local function initializeScript()
-    debugMessage("Inicializando script com funções principais...")
-    autoFarm()
-    autoQuest()
-    farmDragonRace()
-    autoUpgradeStats()
-    debugMessage("Script ativo!")
+-- Função para Auto Instinto
+local function autoInstinto()
+    spawn(function()
+        while getgenv().Auto_Instinto do
+            local character = game.Players.LocalPlayer.Character
+            if character and character:FindFirstChild("Instinto") == nil then
+                game.ReplicatedStorage.Events.Haki:FireServer("Instinto")
+                debugMessage("Ativando Instinto...")
+            end
+            wait(3)
+        end
+    end)
 end
 
-initializeScript()
+-- Função de Auto Click
+local function autoClick()
+    spawn(function()
+        while getgenv().Auto_Click do
+            game:GetService("VirtualInputManager"):SendMouseButtonEvent(0, 0, 0, true, game, 1)
+            debugMessage("Auto Click ativo!")
+            wait(0.1)
+        end
+    end)
+end
+
+-- Ativando Funções com o Menu
+FarmSection:NewToggle("Auto Farm", "Farmar inimigos automaticamente", function(state)
+    getgenv().Auto_Farm = state
+    if state then autoFarm() end
+end)
+
+FarmSection:NewToggle("Auto Quest", "Aceitar missões automaticamente", function(state)
+    getgenv().Auto_Quest = state
+    if state then autoQuest() end
+end)
+
+FarmSection:NewToggle("Farm Dragon Race", "Farmar para raça Dragão", function(state)
+    getgenv().Farm_Dragon_Race = state
+    if state then farmDragonRace() end
+end)
+
+StatsSection:NewToggle("Auto Upgrade Stats", "Melhorar atributos automaticamente", function(state)
+    getgenv().Auto_Upgrade_Stats = state
+    if state then autoUpgradeStats() end
+end)
+
+SettingsSection:NewToggle("Auto Buso", "Ativar Busoshoku Haki automaticamente", function(state)
+    getgenv().Auto_Buso = state
+    if state then autoBuso() end
+end)
+
+SettingsSection:NewToggle("Auto Instinto", "Ativar Instinto automaticamente", function(state)
+    getgenv().Auto_Instinto = state
+    if state then autoInstinto() end
+end)
+
+SettingsSection:NewToggle("Auto Click", "Ativar Auto Click", function(state)
+    getgenv().Auto_Click = state
+    if state then autoClick() end
+end)
+
+debugMessage("Script e menu inicializados!")
