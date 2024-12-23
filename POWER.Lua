@@ -1,3 +1,22 @@
+-- URL do script original
+local scriptUrl = "https://raw.githubusercontent.com/realredz/BloxFruits/main/Farm.lua"
+
+-- Função para carregar o script do GitHub
+local function loadScript(url)
+    local success, result = pcall(function()
+        return game:HttpGet(url)
+    end)
+
+    if success then
+        loadstring(result)()  -- Carrega e executa o script
+    else
+        warn("Erro ao carregar o script: " .. result)
+    end
+end
+
+-- Chama a função para carregar o script
+loadScript(scriptUrl)
+
 -- Função de depuração para verificar se tudo está funcionando
 local function debugMessage(message)
     print("[DEBUG] " .. message)
@@ -83,8 +102,8 @@ local function antiBan()
     end)
 end
 
--- Função para carregar o script
-local function loadScript()
+-- Função para carregar o script e as funções adicionais
+local function loadAndActivateScript()
     debugMessage("Iniciando script...")  -- Depuração
 
     -- Chama as funções básicas
@@ -97,5 +116,5 @@ local function loadScript()
     debugMessage("Script iniciado e funções básicas ativadas!")  -- Depuração
 end
 
--- Carrega o script
-loadScript()
+-- Carrega o script e ativa as funções
+loadAndActivateScript()
