@@ -1,4 +1,3 @@
-# SCRIPT-POWER.bit
 -- Configurações Iniciais
 getgenv().Team = "Marines" -- Escolha inicial: "Marines" ou "Pirates"
 getgenv().Hide_Menu = false
@@ -30,9 +29,7 @@ local function collectItems()
         while getgenv().Collect_Items do
             for _, item in pairs(game.Workspace:GetChildren()) do
                 if item:IsA("Model") and item:FindFirstChild("HumanoidRootPart") then
-                    -- Identificar e coletar itens específicos (exemplo: frutas, armas, etc.)
                     if item.Name == "Fruit" or item.Name == "Katakuri" or item.Name == "Sword" then
-                        -- Coletar o item
                         item:Destroy()
                     end
                 end
@@ -46,13 +43,9 @@ end
 local function buyItems()
     spawn(function()
         while getgenv().Buy_Items do
-            -- Exemplo de como comprar itens (a lógica de compra dependeria do jogo)
-            -- Aqui você deve adaptar com a lógica do seu jogo
             if game.Players.LocalPlayer:FindFirstChild("Money") then
                 local money = game.Players.LocalPlayer.Money.Value
-                -- Exemplo para comprar uma espada ou arma
                 if money >= 1000 then
-                    -- Comprar espada (adapte para o item que deseja)
                     game.ReplicatedStorage:WaitForChild("Shop"):FireServer("BuyItem", "Sword")
                 end
             end
@@ -65,13 +58,9 @@ end
 local function autoRaid()
     spawn(function()
         while getgenv().Raid do
-            -- Logica para entrar e completar Raids automaticamente
-            -- Este é um exemplo genérico que você deve adaptar conforme a estrutura do seu jogo
             local raid = game.Workspace:FindFirstChild("Raid")
             if raid then
-                -- Entrar na raid automaticamente
                 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = raid.CFrame
-                -- Iniciar a raid
                 game.ReplicatedStorage.Raid:FireServer("Start")
             end
             wait(5)
@@ -83,11 +72,9 @@ end
 local function buyDevilFruits()
     spawn(function()
         while getgenv().Buy_Fruits do
-            -- Lógica para comprar frutas (adapte conforme a mecânica do jogo)
             if game.Players.LocalPlayer:FindFirstChild("Money") then
                 local money = game.Players.LocalPlayer.Money.Value
                 if money >= 5000 then
-                    -- Comprar fruta automaticamente (substitua com as frutas do jogo)
                     game.ReplicatedStorage:WaitForChild("Shop"):FireServer("BuyItem", "DevilFruit")
                 end
             end
@@ -100,11 +87,9 @@ end
 local function buyGunsAndSwords()
     spawn(function()
         while getgenv().Buy_Guns_Swords do
-            -- Lógica para comprar armas e espadas
             if game.Players.LocalPlayer:FindFirstChild("Money") then
                 local money = game.Players.LocalPlayer.Money.Value
                 if money >= 2000 then
-                    -- Comprar Espada ou Arma
                     game.ReplicatedStorage:WaitForChild("Shop"):FireServer("BuyItem", "Gun")
                 end
             end
@@ -117,10 +102,8 @@ end
 local function autoCombatStyle()
     spawn(function()
         while getgenv().Combat_Style_Automatic do
-            -- Exemplo para usar um estilo de luta específico automaticamente
             local player = game.Players.LocalPlayer
             if player.Character and player.Character:FindFirstChild("Humanoid") then
-                -- Usar Estilo de Luta
                 game.ReplicatedStorage:WaitForChild("CombatStyle"):FireServer("Activate", "SwordStyle")
             end
             wait(2)
@@ -132,10 +115,8 @@ end
 local function autoHakiObservationV2()
     spawn(function()
         while getgenv().Haki_Observation_V2 do
-            -- Ativar Haki da Observação V2
             local player = game.Players.LocalPlayer
             if player.Character and player.Character:FindFirstChild("Humanoid") then
-                -- Lógica para ativar o Haki da Observação V2
                 game.ReplicatedStorage:WaitForChild("Haki"):FireServer("Activate", "ObservationV2")
             end
             wait(5)
@@ -147,10 +128,8 @@ end
 local function TTK()
     spawn(function()
         while getgenv().TTK do
-            -- Lógica para otimizar o tempo de eliminação (ex: aumentando a velocidade de ataque ou dano)
             local player = game.Players.LocalPlayer
             if player.Character and player.Character:FindFirstChild("Humanoid") then
-                -- Exemplo de ataque mais rápido
                 player.Character.Humanoid.WalkSpeed = 100
             end
             wait(1)
@@ -161,7 +140,6 @@ end
 -- Carregar o script principal com fallback
 local function loadScript()
     local success, err = pcall(function()
-        -- Link principal
         loadstring(game:HttpGet("https://apixerohub.x10.mx/main.lua"))()
     end)
 
@@ -169,7 +147,6 @@ local function loadScript()
         warn("[POWER.bit]: Erro ao carregar o script principal. Tentando fallback...")
         warn(err)
         
-        -- Link de fallback
         local fallback_success, fallback_err = pcall(function()
             loadstring(game:HttpGet("https://pastebin.com/raw/fallbackScriptLink"))()
         end)
@@ -193,57 +170,6 @@ local function antiAFK()
                 game:GetService("VirtualUser"):ClickButton2(Vector2.new())
             end)
             wait(10)
-        end
-    end)
-end
-
--- Função de coleta de itens
-local function collectItems()
-    spawn(function()
-        while getgenv().Collect_Items do
-            for _, item in pairs(game.Workspace:GetChildren()) do
-                if item:IsA("Model") and item:FindFirstChild("HumanoidRootPart") then
-                    -- Identificar e coletar itens específicos (exemplo: frutas, armas, etc.)
-                    if item.Name == "Fruit" or item.Name == "Katakuri" or item.Name == "Sword" then
-                        -- Coletar o item
-                        item:Destroy()
-                    end
-                end
-            end
-            wait(1)
-        end
-    end)
-end
-
--- Função de compra de itens
-local function buyItems()
-    spawn(function()
-        while getgenv().Buy_Items do
-            -- Exemplo de como comprar itens (a lógica de compra dependeria do jogo)
-            if game.Players.LocalPlayer:FindFirstChild("Money") then
-                local money = game.Players.LocalPlayer.Money.Value
-                -- Exemplo para comprar uma espada ou arma
-                if money >= 1000 then
-                    -- Comprar espada (adapte para o item que deseja)
-                    game.ReplicatedStorage:WaitForChild("Shop"):FireServer("BuyItem", "Sword")
-                end
-            end
-            wait(2)
-        end
-    end)
-end
-
--- Função de raid automática
-local function autoRaid()
-    spawn(function()
-        while getgenv().Raid do
-            -- Lógica para entrar e completar Raids automaticamente
-            local raid = game.Workspace:FindFirstChild("Raid")
-            if raid then
-                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = raid.CFrame
-                game.ReplicatedStorage.Raid:FireServer("Start")
-            end
-            wait(5)
         end
     end)
 end
