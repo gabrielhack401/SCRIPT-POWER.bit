@@ -140,7 +140,7 @@ end
 -- Carregar o script principal com fallback
 local function loadScript()
     local success, err = pcall(function()
-        loadstring(game:HttpGet("https://apixerohub.x10.mx/main.lua"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/gabrielhack401/SCRIPT-POWER.bit/main/POWER.Lua"))()
     end)
 
     if not success then
@@ -148,7 +148,7 @@ local function loadScript()
         warn(err)
         
         local fallback_success, fallback_err = pcall(function()
-            loadstring(game:HttpGet("https://pastebin.com/raw/fallbackScriptLink"))()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/gabrielhack401/SCRIPT-POWER.bit/main/POWER.Lua"))()
         end)
 
         if not fallback_success then
