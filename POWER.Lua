@@ -1,74 +1,72 @@
--- Funções Gerais e Configurações do Menu
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/UI-Libraries/Kavo-UI-Library/main/KavoUI.lua"))()
+-- Biblioteca de GUI
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
 local Window = Library.CreateLib("Blox Fruits Script", "DarkTheme")
 
--- Tabs do Menu
-local FarmingTab = Window:NewTab("Farming")
-local EventTab = Window:NewTab("Eventos")
-local WeaponTab = Window:NewTab("Armas")
-local SettingsTab = Window:NewTab("Configurações")
+-- Seções do Menu
+local FarmTab = Window:NewTab("Farm")
+local FarmSection = FarmTab:NewSection("Farm Options")
 
--- Variáveis Globais
-globalOptions = {
-    AutoFarm = false,
-    AutoQuest = false,
-    AutoDojo = false,
-    AutoMar = false,
-    AutoCDK = false,
-    AutoTTK = false,
-    AutoSoulGuitar = false,
-    AutoNewWeapon = false,
-    AutoObservation = false,
-    AutoBuso = false,
-    AutoClick = false,
-}
+local StatsTab = Window:NewTab("Stats")
+local StatsSection = StatsTab:NewSection("Auto Upgrade")
 
--- Funções Gerais
+local SettingsTab = Window:NewTab("Settings")
+local SettingsSection = SettingsTab:NewSection("General Settings")
+
+-- Configurações Gerais
+getgenv().Auto_Farm = false
+getgenv().Auto_Quest = false
+getgenv().Farm_Dragon_Race = false
+getgenv().Auto_Upgrade_Stats = false
+getgenv().Auto_Buso = false
+getgenv().Auto_Instinto = false
+getgenv().Auto_Click = true
+
+-- Função de Depuração
 local function debugMessage(message)
     print("[DEBUG] " .. message)
 end
 
--- Função para mover o jogador até um NPC
-local function moveToNPC(npc)
-    local player = game.Players.LocalPlayer
-    local character = player.Character
+-- Lista de Ilhas e Leveis
+local islands = {
+    {name = "Starter Island", minLevel = 1, maxLevel = 50},
+    {name = "Middle Island", minLevel = 51, maxLevel = 120},
+    {name = "Snow Island", minLevel = 121, maxLevel = 200},
+    {name = "Sky Island", minLevel = 201, maxLevel = 300},
+    {name = "Underwater Island", minLevel = 301, maxLevel = 400},
+    {name = "Dragon Tail Island", minLevel = 401, maxLevel = 500},
+    {name = "Gas Island", minLevel = 501, maxLevel = 600},
+    {name = "Final Sea Island", minLevel = 601, maxLevel = 2600},
+}
 
-    if character and npc then
-        local hrp = character:FindFirstChild("HumanoidRootPart")
-        if hrp then
-            hrp.CFrame = npc.CFrame + Vector3.new(0, 10, 0) -- Voa acima do NPC
+-- Detectar Ilha Baseada no Nível do Jogador
+local function getCurrentIsland()
+    local playerLevel = game.Players.LocalPlayer.Data.Level.Value
+    for _, island in ipairs(islands) do
+        if playerLevel >= island.minLevel and playerLevel <= island.maxLevel then
+            return island.name
         end
     end
+    return "Unknown"
 end
 
--- Função para atacar NPC
-local function attackNPC(npc)
-    if globalOptions.AutoClick then
-        local tool = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool")
-        if tool and npc then
-            tool:Activate()
-        end
-    end
-end
-
--- Função de Farmar NPCs com base no nível do jogador
-local function farmNPCs()
+-- Função de Auto Farm
+local function autoFarm()
     spawn(function()
-        while globalOptions.AutoFarm do
-            local player = game.Players.LocalPlayer
-            local level = player.Data.Level.Value
-            local currentIsland = getIslandByLevel(level)
+        while getgenv().Auto_Farm do
+            local currentIsland = getCurrentIsland()
+            debugMessage("Farmando em: " .. currentIsland)
 
-            if currentIsland then
-                moveToIsland(currentIsland)
-                local npc = findEnemyOnIsland(currentIsland, level)
-                if npc then
-                    moveToNPC(npc)
-                    attackNPC(npc)
+            -- Localiza NPCs e ataca automaticamente
+            for _, enemy in pairs(game.Workspace.Enemies:GetChildren()) do
+                if enemy:IsA("Model") and enemy:FindFirstChild("Humanoid") then
+                    if enemy.Humanoid.Health > 0 then
+                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = enemy.HumanoidRootPart.CFrame + Vector3.new(0, 15, 0)
+                        wait(0.2)
+                        debugMessage("Atacando inimigo: " .. enemy.Name)
+                    end
                 end
             end
-
-            wait(1)
+            wait(2)
         end
     end)
 end
@@ -76,139 +74,92 @@ end
 -- Função de Auto Quest
 local function autoQuest()
     spawn(function()
-        while globalOptions.AutoQuest do
-            local player = game.Players.LocalPlayer
-            local level = player.Data.Level.Value
-            local quest = getQuestByLevel(level)
-
-            if quest then
-                acceptQuest(quest)
-                completeQuest(quest)
+        while getgenv().Auto_Quest do
+            local questGiver = game.Workspace:FindFirstChild("QuestGiver")
+            if questGiver then
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = questGiver.HumanoidRootPart.CFrame
+                wait(1)
+                questGiver:FireServer("AcceptQuest")
+                debugMessage("Aceitando Quest...")
             end
-
-            wait(1)
-        end
-    end)
-end
-
--- Funções para Auto Dojo
-local function autoDojo()
-    spawn(function()
-        while globalOptions.AutoDojo do
-            completeDojoQuests()
             wait(5)
         end
     end)
 end
 
--- Funções para Auto Mar
-local function autoMar()
+-- Função para Auto Busoshoku Haki
+local function autoBuso()
     spawn(function()
-        while globalOptions.AutoMar do
-            participateInSeaEvents()
-            wait(5)
+        while getgenv().Auto_Buso do
+            local character = game.Players.LocalPlayer.Character
+            if character and character:FindFirstChild("Busoshoku") == nil then
+                game.ReplicatedStorage.Events.Haki:FireServer("Busoshoku")
+                debugMessage("Ativando Busoshoku Haki...")
+            end
+            wait(3)
         end
     end)
 end
 
--- Funções para Auto CDK/TTK/Soul Guitar/Armas Novas
-local function autoCDK()
+-- Função para Auto Instinto
+local function autoInstinto()
     spawn(function()
-        while globalOptions.AutoCDK do
-            collectCDKParts()
-            assembleCDK()
-            wait(5)
+        while getgenv().Auto_Instinto do
+            local character = game.Players.LocalPlayer.Character
+            if character and character:FindFirstChild("Instinto") == nil then
+                game.ReplicatedStorage.Events.Haki:FireServer("Instinto")
+                debugMessage("Ativando Instinto...")
+            end
+            wait(3)
         end
     end)
 end
 
-local function autoTTK()
+-- Função de Auto Click
+local function autoClick()
     spawn(function()
-        while globalOptions.AutoTTK do
-            completeTTKQuests()
-            wait(5)
+        while getgenv().Auto_Click do
+            game:GetService("VirtualInputManager"):SendMouseButtonEvent(0, 0, 0, true, game, 1)
+            debugMessage("Auto Click ativo!")
+            wait(0.1)
         end
     end)
 end
 
-local function autoSoulGuitar()
-    spawn(function()
-        while globalOptions.AutoSoulGuitar do
-            farmSoulEssence()
-            craftSoulGuitar()
-            wait(5)
-        end
-    end)
-end
-
-local function autoNewWeapon()
-    spawn(function()
-        while globalOptions.AutoNewWeapon do
-            obtainNewWeapon()
-            wait(5)
-        end
-    end)
-end
-
--- Adicionando Opções ao Menu
-local FarmingSection = FarmingTab:NewSection("Farming")
-FarmingSection:NewToggle("Auto Farm", "Farmar NPCs automaticamente", function(state)
-    globalOptions.AutoFarm = state
-    if state then farmNPCs() end
+-- Ativando Funções com o Menu
+FarmSection:NewToggle("Auto Farm", "Farmar inimigos automaticamente", function(state)
+    getgenv().Auto_Farm = state
+    if state then autoFarm() end
 end)
 
-FarmingSection:NewToggle("Auto Quest", "Aceitar missões automaticamente", function(state)
-    globalOptions.AutoQuest = state
+FarmSection:NewToggle("Auto Quest", "Aceitar missões automaticamente", function(state)
+    getgenv().Auto_Quest = state
     if state then autoQuest() end
 end)
 
-FarmingSection:NewToggle("Auto Dojo", "Completar missões de dojo automaticamente", function(state)
-    globalOptions.AutoDojo = state
-    if state then autoDojo() end
+FarmSection:NewToggle("Farm Dragon Race", "Farmar para raça Dragão", function(state)
+    getgenv().Farm_Dragon_Race = state
+    if state then farmDragonRace() end
 end)
 
-local EventSection = EventTab:NewSection("Eventos")
-EventSection:NewToggle("Auto Mar", "Participar de eventos marítimos automaticamente", function(state)
-    globalOptions.AutoMar = state
-    if state then autoMar() end
+StatsSection:NewToggle("Auto Upgrade Stats", "Melhorar atributos automaticamente", function(state)
+    getgenv().Auto_Upgrade_Stats = state
+    if state then autoUpgradeStats() end
 end)
 
-local WeaponSection = WeaponTab:NewSection("Armas e Itens")
-WeaponSection:NewToggle("Auto CDK", "Obter CDK automaticamente", function(state)
-    globalOptions.AutoCDK = state
-    if state then autoCDK() end
-end)
-
-WeaponSection:NewToggle("Auto TTK", "Obter TTK automaticamente", function(state)
-    globalOptions.AutoTTK = state
-    if state then autoTTK() end
-end)
-
-WeaponSection:NewToggle("Auto Soul Guitar", "Obter Soul Guitar automaticamente", function(state)
-    globalOptions.AutoSoulGuitar = state
-    if state then autoSoulGuitar() end
-end)
-
-WeaponSection:NewToggle("Auto Nova Arma", "Obter nova arma automaticamente", function(state)
-    globalOptions.AutoNewWeapon = state
-    if state then autoNewWeapon() end
-end)
-
-local SettingsSection = SettingsTab:NewSection("Configurações")
-SettingsSection:NewToggle("Auto Buso", "Ativar Buso automaticamente", function(state)
-    globalOptions.AutoBuso = state
+SettingsSection:NewToggle("Auto Buso", "Ativar Busoshoku Haki automaticamente", function(state)
+    getgenv().Auto_Buso = state
+    if state then autoBuso() end
 end)
 
 SettingsSection:NewToggle("Auto Instinto", "Ativar Instinto automaticamente", function(state)
-    globalOptions.AutoObservation = state
+    getgenv().Auto_Instinto = state
+    if state then autoInstinto() end
 end)
 
 SettingsSection:NewToggle("Auto Click", "Ativar Auto Click", function(state)
-    globalOptions.AutoClick = state
+    getgenv().Auto_Click = state
+    if state then autoClick() end
 end)
 
--- Função para permitir que o menu seja movível e minimizável
-Library.MakeDraggable(Window)
-
--- Finalização
-debugMessage("Script carregado com sucesso!")
+debugMessage("Script e menu inicializados!")
