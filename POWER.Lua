@@ -1,6 +1,6 @@
 -- Configurações Iniciais
 getgenv().Team = "Marines" -- Escolha inicial: "Marines" ou "Pirates"
-getgenv().Hide_Menu = false
+getgenv().Hide_Menu = true
 getgenv().Anti_Ban = true
 getgenv().Infinite_Health = true
 getgenv().Infinite_Stamina = true
@@ -8,7 +8,7 @@ getgenv().Auto_Farm = false
 getgenv().Auto_Quest = false
 getgenv().Fast_Attack = false
 getgenv().Auto_Haki = false
-getgenv().Devil_Fruit_Notifier = false
+getgenv().Devil_Fruit_Notifier = true
 getgenv().Auto_Chest = false
 getgenv().Auto_Boss = false
 getgenv().Auto_AFK = true
