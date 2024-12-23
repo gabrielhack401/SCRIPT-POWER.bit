@@ -1,4 +1,4 @@
--- Biblioteca GUI (Usando uma interface mais simples e responsiva)
+-- Carregar Biblioteca de GUI
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/axstin/rbxui/master/source.lua"))()
 local Window = Library.new("Blox Fruits Ultimate Script")
 
@@ -8,6 +8,7 @@ local StatsSection = Window:Section("Auto Upgrade")
 local SettingsSection = Window:Section("General Settings")
 local TeleportSection = Window:Section("Teleport")
 local EventsSection = Window:Section("Maritime Events")
+local FruitsSection = Window:Section("Collect Fruits")
 
 -- Configurações Gerais
 getgenv().Auto_Farm = false
@@ -16,6 +17,7 @@ getgenv().Immortality = false
 getgenv().Infinite_Stamina = false
 getgenv().Auto_Buso = false
 getgenv().Auto_Instinto = false
+getgenv().Auto_Fruit_Collect = false
 
 -- Função de Auto Farm
 local function autoFarm()
@@ -47,6 +49,22 @@ local function infiniteStamina()
             game.Players.LocalPlayer.Character.Stamina.Value = game.Players.LocalPlayer.Character.Stamina.MaxValue
         end
         wait(0.1)
+    end
+end
+
+-- Função de Coletar Frutas de Haki
+local function collectHakiFruits()
+    while getgenv().Auto_Fruit_Collect do
+        -- Procurar por todas as frutas no mapa
+        for _, fruit in pairs(game.Workspace:GetChildren()) do
+            if fruit:IsA("Model") and fruit.Name:match("HakiFruit") then  -- Verifica se a fruta é uma fruta de Haki
+                if fruit:FindFirstChild("Hitbox") then
+                    fireclickdetector(fruit.Hitbox)  -- Simula o clique na fruta para coletá-la
+                    debugMessage("Coletando fruta Haki: " .. fruit.Name)
+                end
+            end
+        end
+        wait(3)  -- Espera um tempo antes de procurar novamente
     end
 end
 
@@ -142,3 +160,13 @@ end)
 EventsSection:Button("Iniciar Evento Marítimo 3", function()
     maritimeEvent("Event3")
 end)
+
+-- Coleta Automática de Frutas Haki
+FruitsSection:Button("Coletar Frutas de Haki", function()
+    getgenv().Auto_Fruit_Collect = true
+    collectHakiFruits()
+end)
+
+-- Exibindo o menu para o jogador
+Window:Show()
+
