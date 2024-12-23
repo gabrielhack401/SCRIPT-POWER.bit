@@ -28,6 +28,29 @@ local function debugMessage(message)
     print("[DEBUG] " .. message)
 end
 
+-- Função para mover o jogador até um NPC
+local function moveToNPC(npc)
+    local player = game.Players.LocalPlayer
+    local character = player.Character
+
+    if character and npc then
+        local hrp = character:FindFirstChild("HumanoidRootPart")
+        if hrp then
+            hrp.CFrame = npc.CFrame + Vector3.new(0, 10, 0) -- Voa acima do NPC
+        end
+    end
+end
+
+-- Função para atacar NPC
+local function attackNPC(npc)
+    if globalOptions.AutoClick then
+        local tool = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool")
+        if tool and npc then
+            tool:Activate()
+        end
+    end
+end
+
 -- Função de Farmar NPCs com base no nível do jogador
 local function farmNPCs()
     spawn(function()
@@ -38,7 +61,11 @@ local function farmNPCs()
 
             if currentIsland then
                 moveToIsland(currentIsland)
-                farmEnemiesOnIsland(currentIsland, level)
+                local npc = findEnemyOnIsland(currentIsland, level)
+                if npc then
+                    moveToNPC(npc)
+                    attackNPC(npc)
+                end
             end
 
             wait(1)
@@ -179,6 +206,9 @@ end)
 SettingsSection:NewToggle("Auto Click", "Ativar Auto Click", function(state)
     globalOptions.AutoClick = state
 end)
+
+-- Função para permitir que o menu seja movível e minimizável
+Library.MakeDraggable(Window)
 
 -- Finalização
 debugMessage("Script carregado com sucesso!")
