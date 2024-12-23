@@ -1,129 +1,144 @@
--- Função de depuração para verificar se tudo está funcionando
+-- Configurações Gerais
+getgenv().Auto_Farm = true
+getgenv().Auto_Quest = true
+getgenv().Auto_Dojo = true
+getgenv().Farm_Dragon_Race = true
+getgenv().Auto_Upgrade_Stats = true
+getgenv().Dragon_Fruit_Quest = true
+getgenv().Gas_Fruit_Quest = true
+
+-- Função de Depuração
 local function debugMessage(message)
     print("[DEBUG] " .. message)
 end
 
--- Configurações Iniciais
-getgenv().Auto_Farm = true
-getgenv().Auto_Quest = true
-getgenv().Anti_Ban = true
-getgenv().Auto_AFK = true
-getgenv().Infinite_Health = true
-getgenv().Auto_Stats = true
-getgenv().Farm_Level = 100
+-- Lista de Ilhas e Leveis
+local islands = {
+    {name = "Starter Island", minLevel = 1, maxLevel = 50},
+    {name = "Middle Island", minLevel = 51, maxLevel = 120},
+    {name = "Snow Island", minLevel = 121, maxLevel = 200},
+    {name = "Sky Island", minLevel = 201, maxLevel = 300},
+    {name = "Underwater Island", minLevel = 301, maxLevel = 400},
+    {name = "Dragon Tail Island", minLevel = 401, maxLevel = 500},
+    {name = "Gas Island", minLevel = 501, maxLevel = 600},
+    {name = "Final Sea Island", minLevel = 601, maxLevel = 2600},
+}
 
--- Função Anti-AFK
-local function antiAFK()
-    spawn(function()
-        while getgenv().Auto_AFK do
-            debugMessage("Anti-AFK ativado")  -- Depuração
-            game:GetService("Players").LocalPlayer.Idled:connect(function()
-                game:GetService("VirtualUser"):ClickButton2(Vector2.new())
-            end)
-            wait(10)  -- Aguarda 10 segundos entre as verificações
+-- Detectar Ilha Baseada no Nível
+local function getCurrentIsland()
+    local playerLevel = game.Players.LocalPlayer.Data.Level.Value
+    for _, island in ipairs(islands) do
+        if playerLevel >= island.minLevel and playerLevel <= island.maxLevel then
+            return island.name
         end
-    end)
+    end
+    return "Unknown"
 end
 
--- Função de Auto-Farm
+-- Auto Farm por Ilha
 local function autoFarm()
     spawn(function()
         while getgenv().Auto_Farm do
-            debugMessage("Iniciando Auto-Farm...")  -- Depuração
-            local player = game.Players.LocalPlayer
-            local targetLevel = getgenv().Farm_Level
-            -- Simulando a coleta de recursos ou ataques a inimigos
+            local currentIsland = getCurrentIsland()
+            debugMessage("Farmando em: " .. currentIsland)
+            
+            -- Localizar inimigos baseados no nível
             for _, enemy in pairs(game.Workspace:GetChildren()) do
-                if enemy:IsA("Model") and enemy:FindFirstChild("Humanoid") then
-                    local level = enemy:FindFirstChild("Level")
-                    if level and tonumber(level.Value) >= targetLevel then
-                        debugMessage("Inimigo encontrado: " .. enemy.Name)  -- Depuração
-                        -- Lógica para atacar o inimigo
-                        -- Adicione sua lógica de combate aqui
-                    end
+                if enemy:IsA("Model") and enemy:FindFirstChild("Humanoid") and 
+                   enemy:FindFirstChild("Level") and 
+                   enemy.Level.Value <= game.Players.LocalPlayer.Data.Level.Value then
+                    debugMessage("Atacando inimigo: " .. enemy.Name)
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = enemy.HumanoidRootPart.CFrame
                 end
             end
-            wait(2)  -- Aguarda 2 segundos antes de tentar novamente
+            wait(2)
         end
     end)
 end
 
--- Função de Auto-Quest
-local function autoQuest()
+-- Auto Quest para Missoes de Faixas
+local function autoDojoQuest()
     spawn(function()
-        while getgenv().Auto_Quest do
-            debugMessage("Iniciando Auto-Quest...")  -- Depuração
-            local quests = game.Workspace:FindFirstChild("Quests")
-            if quests then
-                debugMessage("Iniciando a primeira quest...")
-                -- Aqui você pode adicionar a lógica para aceitar uma quest
-                -- E então, completar os objetivos da quest
+        while getgenv().Auto_Dojo do
+            debugMessage("Completando missões do Dojo...")
+            local dojoMaster = game.Workspace:FindFirstChild("DojoMaster")
+            if dojoMaster then
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = dojoMaster.HumanoidRootPart.CFrame
+                dojoMaster:FireServer("CompleteMission")
             end
-            wait(5)  -- Aguarda 5 segundos antes de tentar novamente
+            wait(5)
         end
     end)
 end
 
--- Função de Infinite Health (garante que o jogador tenha saúde infinita)
-local function infiniteHealth()
+-- Farmar Raça Dragão
+local function farmDragonRace()
     spawn(function()
-        while getgenv().Infinite_Health do
-            debugMessage("Ativando Infinite Health...")  -- Depuração
-            local player = game.Players.LocalPlayer
-            if player.Character and player.Character:FindFirstChild("Humanoid") then
-                player.Character.Humanoid.Health = player.Character.Humanoid.MaxHealth
+        while getgenv().Farm_Dragon_Race do
+            debugMessage("Farmando Raça Dragão...")
+            local dragonTrainer = game.Workspace:FindFirstChild("DragonTrainer")
+            if dragonTrainer then
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = dragonTrainer.HumanoidRootPart.CFrame
+                dragonTrainer:FireServer("Train")
             end
-            wait(1)  -- Ajusta a saúde a cada segundo
+            wait(10)
         end
     end)
 end
 
--- Função de Anti-Ban (simples implementação para proteger contra banimentos)
-local function antiBan()
+-- Auto Upgrade de Atributos
+local function autoUpgradeStats()
     spawn(function()
-        while getgenv().Anti_Ban do
-            debugMessage("Anti-Ban ativado...")  -- Depuração
-            -- Verifique se há alguma proteção contra banimento (você pode personalizar conforme necessário)
-            -- Normalmente, você pode bloquear eventos que indicam atividade suspeita
-            wait(10)  -- Aguarda 10 segundos entre as verificações
-        end
-    end)
-end
-
--- Função de Auto-Stats (Distribui pontos automaticamente em Blox Fruits)
-local function autoStats()
-    spawn(function()
-        while getgenv().Auto_Stats do
-            debugMessage("Distribuindo pontos de stats automaticamente...")  -- Depuração
-            local player = game.Players.LocalPlayer
-            local stats = player:FindFirstChild("Stats")
-            if stats then
-                -- Exemplo de distribuição de pontos, ajustando de acordo com o que o script permite
-                stats.Strength.Value = stats.Strength.Value + 1
-                stats.Stamina.Value = stats.Stamina.Value + 1
-                stats.Defense.Value = stats.Defense.Value + 1
-                stats.Sword.Value = stats.Sword.Value + 1
-                debugMessage("Pontos de stats distribuídos!")
+        while getgenv().Auto_Upgrade_Stats do
+            debugMessage("Aumentando atributos automaticamente...")
+            local stats = {"Strength", "Defense", "Sword", "Gun"}
+            for _, stat in ipairs(stats) do
+                game.ReplicatedStorage.UpgradeStat:FireServer(stat, 10)
             end
-            wait(10)  -- Ajusta a cada 10 segundos
+            wait(3)
         end
     end)
 end
 
--- Função para carregar o script e as funções adicionais
-local function loadAndActivateScript()
-    debugMessage("Iniciando script...")  -- Depuração
+-- Missoes de Frutas Dragon e Gas
+local function dragonFruitQuest()
+    spawn(function()
+        while getgenv().Dragon_Fruit_Quest do
+            debugMessage("Completar missões da Dragon Fruit...")
+            local dragonQuestGiver = game.Workspace:FindFirstChild("DragonQuestGiver")
+            if dragonQuestGiver then
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = dragonQuestGiver.HumanoidRootPart.CFrame
+                dragonQuestGiver:FireServer("Complete")
+            end
+            wait(7)
+        end
+    end)
+end
 
-    -- Chama as funções básicas
-    antiAFK()
+local function gasFruitQuest()
+    spawn(function()
+        while getgenv().Gas_Fruit_Quest do
+            debugMessage("Completar missões da Gas Fruit...")
+            local gasQuestGiver = game.Workspace:FindFirstChild("GasQuestGiver")
+            if gasQuestGiver then
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = gasQuestGiver.HumanoidRootPart.CFrame
+                gasQuestGiver:FireServer("Complete")
+            end
+            wait(7)
+        end
+    end)
+end
+
+-- Inicialização do Script
+local function initializeScript()
+    debugMessage("Inicializando script com as funções atualizadas...")
     autoFarm()
-    autoQuest()
-    infiniteHealth()
-    antiBan()
-    autoStats()
-
-    debugMessage("Script iniciado e funções básicas ativadas!")  -- Depuração
+    autoDojoQuest()
+    farmDragonRace()
+    autoUpgradeStats()
+    dragonFruitQuest()
+    gasFruitQuest()
+    debugMessage("Script ativado com sucesso!")
 end
 
--- Carrega o script e ativa as funções
-loadAndActivateScript()
+initializeScript()
