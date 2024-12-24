@@ -1,8 +1,20 @@
 -- Funções Gerais e Configurações do Menu
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/UI-Libraries/Kavo-UI-Library/main/KavoUI.lua"))()
 local Window = Library.CreateLib("Blox Fruits Script", "DarkTheme")
+
+-- Criando as abas do menu
 local MainTab = Window:NewTab("Menu Principal")
+local FarmingTab = Window:NewTab("Farming")
+local WeaponTab = Window:NewTab("Armas e Itens")
+local SettingsTab = Window:NewTab("Configurações")
+local EventTab = Window:NewTab("Eventos")
+
+-- Seções dentro de cada aba
 local MainSection = MainTab:NewSection("Funções Gerais")
+local FarmingSection = FarmingTab:NewSection("Farming")
+local WeaponSection = WeaponTab:NewSection("Armas e Itens")
+local SettingsSection = SettingsTab:NewSection("Configurações")
+local EventSection = EventTab:NewSection("Eventos")
 
 -- Mensagem Inicial
 print("============================================")
@@ -19,9 +31,9 @@ globalOptions = {
     AutoTTK = false,
     AutoFruitCollect = true,  -- Deixa sempre no TRUE
     AutoHakiFruitCollect = true, -- Deixa sempre no TRUE para frutas de Haki
-    AutoBuso = true,
-    AutoObservation = true,
-    AutoClick = true
+    AutoBuso = false,
+    AutoObservation = false,
+    AutoClick = false
 }
 
 -- Verificar se a fruta é do tipo Haki ou normal
