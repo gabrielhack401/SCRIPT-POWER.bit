@@ -1,59 +1,57 @@
--- Lista de frutas já coletadas para evitar duplicação
+-- Função de notificação
+local function sendNotification(title, text)
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = title,
+        Text = text,
+        Duration = 3
+    })
+end
+
+-- Tabela para armazenar frutas já coletadas
 local collectedFruits = {}
 
--- Função para verificar se é uma fruta de Haki ou normal
-local function isFruit(fruit)
-    -- Frutas de Haki (personalize conforme necessário)
-    if fruit.Name:match("Haki") then
-        return true
-    end
-    -- Frutas normais (personalize conforme necessário)
-    if fruit.Name:match("Fruit") then
+-- Função para verificar se a fruta é do tipo correto (normal ou Haki)
+local function isCollectibleFruit(fruit)
+    if fruit.Name:match("Fruit") or fruit.Name:match("Haki") then
         return true
     end
     return false
 end
 
--- Função para coletar frutas automaticamente
-local function collectFruits()
+-- Função principal de coleta automática
+local function collectFruitsAutomatically()
     while true do
-        -- Itera por todas as frutas no jogo
         for _, fruit in pairs(game.Workspace:GetChildren()) do
-            -- Verifica se a fruta é uma fruta de Haki ou normal
-            if fruit:IsA("Model") and isFruit(fruit) then
-                -- Verifica se a fruta já foi coletada
+            if fruit:IsA("Model") and isCollectibleFruit(fruit) then
                 if not collectedFruits[fruit] then
-                    -- Marca a fruta como coletada
+                    -- Marcar a fruta como coletada
                     collectedFruits[fruit] = true
-                    -- Simula o clique na Hitbox da fruta para coletá-la
+
+                    -- Tenta coletar a fruta (simula um clique na Hitbox)
                     if fruit:FindFirstChild("Hitbox") then
                         fireclickdetector(fruit.Hitbox)
-                        -- Exibe notificação de que a fruta foi coletada
-                        game:GetService("StarterGui"):SetCore("SendNotification", {
-                            Title = "Fruta Coletada!",
-                            Text = "Você coletou: " .. fruit.Name,
-                            Duration = 2
-                        })
+
+                        -- Envia notificação de coleta
+                        sendNotification("Fruta Coletada!", "Você coletou: " .. fruit.Name)
+
+                        -- Exibe no console
                         print("Fruta coletada: " .. fruit.Name)
                     end
                 end
             end
         end
-        wait(1)  -- Aguarda 1 segundo antes de verificar novamente
+        wait(1)  -- Aguarda 1 segundo antes de checar novamente
     end
 end
 
--- Função para detectar novas frutas no jogo e notificar
+-- Função para detectar novas frutas no jogo
 game.Workspace.ChildAdded:Connect(function(child)
-    if child:IsA("Model") and isFruit(child) then
-        game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = "Nova Fruta Encontrada!",
-            Text = "Uma nova fruta apareceu: " .. child.Name,
-            Duration = 3
-        })
+    if child:IsA("Model") and isCollectibleFruit(child) then
+        -- Envia uma notificação para a nova fruta que apareceu
+        sendNotification("Nova Fruta Encontrada!", "Uma nova fruta apareceu: " .. child.Name)
         print("Nova fruta encontrada: " .. child.Name)
     end
 end)
 
 -- Inicia o processo de coleta de frutas
-collectFruits()
+collectFruitsAutomatically()
