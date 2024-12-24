@@ -1,57 +1,185 @@
--- Função de notificação
-local function sendNotification(title, text)
-    game:GetService("StarterGui"):SetCore("SendNotification", {
-        Title = title,
-        Text = text,
-        Duration = 3
-    })
+-- Funções Gerais e Configurações do Menu
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/UI-Libraries/Kavo-UI-Library/main/KavoUI.lua"))()
+local Window = Library.CreateLib("Blox Fruits Script", "DarkTheme")
+
+-- Mensagem Inicial
+print("============================================")
+print("BEM VINDO(A) A POWER.bit SCRIPT!")
+print("============================================")
+
+-- Tabs do Menu
+local FarmingTab = Window:NewTab("Farming")
+local EventTab = Window:NewTab("Eventos")
+local WeaponTab = Window:NewTab("Armas")
+local SettingsTab = Window:NewTab("Configurações")
+
+-- Variáveis Globais
+globalOptions = {
+    AutoFarm = false,
+    AutoQuest = false,
+    AutoDojo = false,
+    AutoMar = false,
+    AutoCDK = false,
+    AutoTTK = false,
+    AutoSoulGuitar = false,
+    AutoNewWeapon = false,
+    AutoObservation = false,
+    AutoBuso = false,
+    AutoClick = false,
+    AutoFruitCollect = true, -- Adicionando a opção para coletar frutas automaticamente
+}
+
+-- Funções Gerais
+local function debugMessage(message)
+    print("[DEBUG] " .. message)
 end
 
--- Tabela para armazenar frutas já coletadas
-local collectedFruits = {}
-
--- Função para verificar se a fruta é do tipo correto (normal ou Haki)
-local function isCollectibleFruit(fruit)
-    if fruit.Name:match("Fruit") or fruit.Name:match("Haki") then
-        return true
-    end
-    return false
+-- Função para verificar se a fruta é do tipo Haki ou normal
+local function isHakiFruit(fruit)
+    return fruit.Name:match("Haki") or fruit.Name:match("Fruit")
 end
 
--- Função principal de coleta automática
-local function collectFruitsAutomatically()
-    while true do
-        for _, fruit in pairs(game.Workspace:GetChildren()) do
-            if fruit:IsA("Model") and isCollectibleFruit(fruit) then
-                if not collectedFruits[fruit] then
-                    -- Marcar a fruta como coletada
-                    collectedFruits[fruit] = true
-
-                    -- Tenta coletar a fruta (simula um clique na Hitbox)
+-- Função para coletar as frutas
+local function collectFruits()
+    spawn(function()
+        while globalOptions.AutoFruitCollect do
+            -- Iterar sobre todas as frutas no jogo
+            for _, fruit in pairs(game.Workspace:GetChildren()) do
+                -- Verificar se é uma fruta Haki ou normal
+                if fruit:IsA("Model") and isHakiFruit(fruit) then
                     if fruit:FindFirstChild("Hitbox") then
+                        -- Coletar a fruta (simulando o clique)
                         fireclickdetector(fruit.Hitbox)
-
-                        -- Envia notificação de coleta
-                        sendNotification("Fruta Coletada!", "Você coletou: " .. fruit.Name)
-
-                        -- Exibe no console
                         print("Fruta coletada: " .. fruit.Name)
+                        -- Enviar notificação
+                        game:GetService("StarterGui"):SetCore("SendNotification", {
+                            Title = "Fruta Coletada",
+                            Text = fruit.Name,
+                            Duration = 5,
+                        })
                     end
                 end
             end
+            wait(1) -- Espera de 1 segundo antes de verificar novamente
         end
-        wait(1)  -- Aguarda 1 segundo antes de checar novamente
-    end
+    end)
 end
 
--- Função para detectar novas frutas no jogo
-game.Workspace.ChildAdded:Connect(function(child)
-    if child:IsA("Model") and isCollectibleFruit(child) then
-        -- Envia uma notificação para a nova fruta que apareceu
-        sendNotification("Nova Fruta Encontrada!", "Uma nova fruta apareceu: " .. child.Name)
-        print("Nova fruta encontrada: " .. child.Name)
-    end
+-- Funções de Farming e outras opções
+local function farmNPCs()
+    spawn(function()
+        while globalOptions.AutoFarm do
+            -- Colocar aqui as funções para farmar NPCs
+            wait(1)
+        end
+    end)
+end
+
+local function autoQuest()
+    spawn(function()
+        while globalOptions.AutoQuest do
+            -- Colocar aqui as funções para auto quest
+            wait(1)
+        end
+    end)
+end
+
+-- Funções para Auto Dojo, Mar, CDK, TTK, etc.
+local function autoDojo()
+    spawn(function()
+        while globalOptions.AutoDojo do
+            -- Colocar aqui as funções para auto dojo
+            wait(5)
+        end
+    end)
+end
+
+local function autoMar()
+    spawn(function()
+        while globalOptions.AutoMar do
+            -- Colocar aqui as funções para auto mar
+            wait(5)
+        end
+    end)
+end
+
+local function autoCDK()
+    spawn(function()
+        while globalOptions.AutoCDK do
+            -- Colocar aqui as funções para auto CDK
+            wait(5)
+        end
+    end)
+end
+
+local function autoTTK()
+    spawn(function()
+        while globalOptions.AutoTTK do
+            -- Colocar aqui as funções para auto TTK
+            wait(5)
+        end
+    end)
+end
+
+-- Adicionando Opções ao Menu
+local FarmingSection = FarmingTab:NewSection("Farming")
+FarmingSection:NewToggle("Auto Farm", "Farmar NPCs automaticamente", function(state)
+    globalOptions.AutoFarm = state
+    if state then farmNPCs() end
 end)
 
--- Inicia o processo de coleta de frutas
-collectFruitsAutomatically()
+FarmingSection:NewToggle("Auto Quest", "Aceitar missões automaticamente", function(state)
+    globalOptions.AutoQuest = state
+    if state then autoQuest() end
+end)
+
+FarmingSection:NewToggle("Auto Dojo", "Completar missões de dojo automaticamente", function(state)
+    globalOptions.AutoDojo = state
+    if state then autoDojo() end
+end)
+
+FarmingSection:NewToggle("Coletar Frutas Automaticamente", "Coletar todas as frutas do tipo Haki e normais", function(state)
+    globalOptions.AutoFruitCollect = state
+    if state then collectFruits() end
+end)
+
+local EventSection = EventTab:NewSection("Eventos")
+EventSection:NewToggle("Auto Mar", "Participar de eventos marítimos automaticamente", function(state)
+    globalOptions.AutoMar = state
+    if state then autoMar() end
+end)
+
+local WeaponSection = WeaponTab:NewSection("Armas e Itens")
+WeaponSection:NewToggle("Auto CDK", "Obter CDK automaticamente", function(state)
+    globalOptions.AutoCDK = state
+    if state then autoCDK() end
+end)
+
+WeaponSection:NewToggle("Auto TTK", "Obter TTK automaticamente", function(state)
+    globalOptions.AutoTTK = state
+    if state then autoTTK() end
+end)
+
+local SettingsSection = SettingsTab:NewSection("Configurações")
+SettingsSection:NewToggle("Auto Buso", "Ativar Buso automaticamente", function(state)
+    globalOptions.AutoBuso = state
+end)
+
+SettingsSection:NewToggle("Auto Instinto", "Ativar Instinto automaticamente", function(state)
+    globalOptions.AutoObservation = state
+end)
+
+SettingsSection:NewToggle("Auto Click", "Ativar Auto Click", function(state)
+    globalOptions.AutoClick = state
+end)
+
+-- Função para permitir que o menu seja movível e minimizável
+Library.MakeDraggable(Window)
+
+-- Iniciar o processo de coleta de frutas automaticamente
+if globalOptions.AutoFruitCollect then
+    collectFruits()
+end
+
+-- Finalização
+debugMessage("Script carregado com sucesso!")
