@@ -1,27 +1,75 @@
--- Funções Gerais e Configurações do Menu
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/UI-Libraries/Kavo-UI-Library/main/KavoUI.lua"))()
-local Window = Library.CreateLib("Blox Fruits Script", "DarkTheme")
+-- Criando a interface GUI
+local screenGui = Instance.new("ScreenGui")
+screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
--- Criando as abas do menu
-local MainTab = Window:NewTab("Menu Principal")
-local FarmingTab = Window:NewTab("Farming")
-local WeaponTab = Window:NewTab("Armas e Itens")
-local SettingsTab = Window:NewTab("Configurações")
-local EventTab = Window:NewTab("Eventos")
+-- Função para criar um botão
+local function createButton(text, position, size, callback)
+    local button = Instance.new("TextButton")
+    button.Parent = screenGui
+    button.Text = text
+    button.Position = position
+    button.Size = size
+    button.BackgroundColor3 = Color3.fromRGB(34, 34, 34)
+    button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    button.Font = Enum.Font.SourceSans
+    button.TextSize = 24
 
--- Seções dentro de cada aba
-local MainSection = MainTab:NewSection("Funções Gerais")
-local FarmingSection = FarmingTab:NewSection("Farming")
-local WeaponSection = WeaponTab:NewSection("Armas e Itens")
-local SettingsSection = SettingsTab:NewSection("Configurações")
-local EventSection = EventTab:NewSection("Eventos")
+    button.MouseButton1Click:Connect(callback)
 
--- Mensagem Inicial
-print("============================================")
-print("BEM VINDO(A) A POWER.bit SCRIPT!")
-print("============================================")
+    return button
+end
 
--- Funções globais
+-- Função para criar uma label
+local function createLabel(text, position, size)
+    local label = Instance.new("TextLabel")
+    label.Parent = screenGui
+    label.Text = text
+    label.Position = position
+    label.Size = size
+    label.BackgroundTransparency = 1
+    label.TextColor3 = Color3.fromRGB(255, 255, 255)
+    label.Font = Enum.Font.SourceSans
+    label.TextSize = 30
+    return label
+end
+
+-- Função para exibir o menu principal
+local function showMenu()
+    -- Título do menu
+    createLabel("Blox Fruits Script", UDim2.new(0.5, -100, 0.1, 0), UDim2.new(0, 200, 0, 50))
+
+    -- Botões do menu principal
+    createButton("Coletar Frutas", UDim2.new(0.5, -100, 0.3, 0), UDim2.new(0, 200, 0, 50), function()
+        globalOptions.AutoFruitCollect = true  -- Deixa sempre no TRUE
+        collectFruits()  -- Inicia a coleta de frutas
+    end)
+
+    createButton("Coletar Frutas de Haki", UDim2.new(0.5, -100, 0.4, 0), UDim2.new(0, 200, 0, 50), function()
+        globalOptions.AutoHakiFruitCollect = true  -- Deixa sempre no TRUE
+        collectHakiFruits()  -- Inicia a coleta de frutas de Haki
+    end)
+
+    createButton("Auto Farm NPCs", UDim2.new(0.5, -100, 0.5, 0), UDim2.new(0, 200, 0, 50), function()
+        globalOptions.AutoFarm = true
+        farmNPCs()  -- Inicia o farming de NPCs
+    end)
+
+    createButton("Auto Quest", UDim2.new(0.5, -100, 0.6, 0), UDim2.new(0, 200, 0, 50), function()
+        globalOptions.AutoQuest = true
+        autoQuest()  -- Aceita as missões automaticamente
+    end)
+
+    createButton("Auto Dojo", UDim2.new(0.5, -100, 0.7, 0), UDim2.new(0, 200, 0, 50), function()
+        globalOptions.AutoDojo = true
+        autoDojo()  -- Executa o Auto Dojo
+    end)
+
+    createButton("Sair", UDim2.new(0.5, -100, 0.8, 0), UDim2.new(0, 200, 0, 50), function()
+        screenGui:Destroy()  -- Fecha o menu
+    end)
+end
+
+-- Funções Globais e Configurações do Menu
 globalOptions = {
     AutoFarm = false,
     AutoQuest = false,
@@ -30,18 +78,17 @@ globalOptions = {
     AutoCDK = false,
     AutoTTK = false,
     AutoFruitCollect = true,  -- Deixa sempre no TRUE
-    AutoHakiFruitCollect = true, -- Deixa sempre no TRUE para frutas de Haki
+    AutoHakiFruitCollect = true, -- Deixa sempre no TRUE
     AutoBuso = false,
     AutoObservation = false,
     AutoClick = false
 }
 
--- Verificar se a fruta é do tipo Haki ou normal
+-- Funções de coleta de frutas
 local function isHakiFruit(fruit)
     return fruit.Name:match("Haki") or fruit.Name:match("Fruit")
 end
 
--- Coletar frutas, incluindo as de Haki
 local function collectFruits()
     spawn(function()
         while globalOptions.AutoFruitCollect do
@@ -61,12 +108,10 @@ local function collectFruits()
     end)
 end
 
--- Função para coletar frutas de Haki
 local function collectHakiFruits()
     spawn(function()
         while globalOptions.AutoHakiFruitCollect do
             for _, fruit in pairs(game.Workspace:GetChildren()) do
-                -- Verificar se é uma fruta de Haki pela cor
                 if fruit:IsA("Model") and fruit:FindFirstChild("Hitbox") and fruit.BrickColor == BrickColor.new("Bright yellow") then
                     fireclickdetector(fruit.Hitbox)
                     print("Fruta de Haki coletada: " .. fruit.Name)
@@ -82,7 +127,7 @@ local function collectHakiFruits()
     end)
 end
 
--- Funções de Farming e Coleta de Frutas
+-- Funções de Farming e Missões
 local function farmNPCs()
     spawn(function()
         while globalOptions.AutoFarm do
@@ -92,7 +137,6 @@ local function farmNPCs()
     end)
 end
 
--- Aceitar missões automaticamente
 local function autoQuest()
     spawn(function()
         while globalOptions.AutoQuest do
@@ -102,7 +146,6 @@ local function autoQuest()
     end)
 end
 
--- Auto Dojo
 local function autoDojo()
     spawn(function()
         while globalOptions.AutoDojo do
@@ -112,104 +155,5 @@ local function autoDojo()
     end)
 end
 
--- Auto Mar
-local function autoMar()
-    spawn(function()
-        while globalOptions.AutoMar do
-            print("Participando de eventos marítimos...")
-            wait(5)
-        end
-    end)
-end
-
--- Auto CDK
-local function autoCDK()
-    spawn(function()
-        while globalOptions.AutoCDK do
-            print("Obtendo CDK automaticamente...")
-            wait(5)
-        end
-    end)
-end
-
--- Auto TTK
-local function autoTTK()
-    spawn(function()
-        while globalOptions.AutoTTK do
-            print("Obtendo TTK automaticamente...")
-            wait(5)
-        end
-    end)
-end
-
--- Configurações de Buso e Instinto
-local function autoBuso()
-    print("Ativando Buso automaticamente...")
-end
-
-local function autoObservation()
-    print("Ativando Instinto automaticamente...")
-end
-
-local function autoClick()
-    print("Auto Click ativado!")
-end
-
--- Adicionando todas as opções ao Menu
-MainSection:NewToggle("Auto Farm NPCs", "Farmar NPCs automaticamente", function(state)
-    globalOptions.AutoFarm = state
-    if state then farmNPCs() end
-end)
-
-MainSection:NewToggle("Auto Quest", "Aceitar missões automaticamente", function(state)
-    globalOptions.AutoQuest = state
-    if state then autoQuest() end
-end)
-
-MainSection:NewToggle("Auto Dojo", "Completar missões de dojo automaticamente", function(state)
-    globalOptions.AutoDojo = state
-    if state then autoDojo() end
-end)
-
-MainSection:NewToggle("Coletar Frutas", "Coletar frutas automaticamente", function(state)
-    globalOptions.AutoFruitCollect = true  -- Deixa sempre true
-    collectFruits()  -- Coleta frutas sempre
-end)
-
-MainSection:NewToggle("Coletar Frutas de Haki", "Coletar frutas de Haki automaticamente", function(state)
-    globalOptions.AutoHakiFruitCollect = true  -- Deixa sempre true
-    collectHakiFruits()  -- Coleta frutas de Haki sempre
-end)
-
-MainSection:NewToggle("Auto Mar", "Participar de eventos marítimos automaticamente", function(state)
-    globalOptions.AutoMar = state
-    if state then autoMar() end
-end)
-
-MainSection:NewToggle("Auto CDK", "Obter CDK automaticamente", function(state)
-    globalOptions.AutoCDK = state
-    if state then autoCDK() end
-end)
-
-MainSection:NewToggle("Auto TTK", "Obter TTK automaticamente", function(state)
-    globalOptions.AutoTTK = state
-    if state then autoTTK() end
-end)
-
-MainSection:NewToggle("Auto Buso", "Ativar Buso automaticamente", function(state)
-    globalOptions.AutoBuso = state
-    if state then autoBuso() end
-end)
-
-MainSection:NewToggle("Auto Instinto", "Ativar Instinto automaticamente", function(state)
-    globalOptions.AutoObservation = state
-    if state then autoObservation() end
-end)
-
-MainSection:NewToggle("Auto Click", "Ativar Auto Click", function(state)
-    globalOptions.AutoClick = state
-    if state then autoClick() end
-end)
-
--- Finalização
-print("Script carregado com sucesso!")
+-- Exibe o menu na tela
+showMenu()
