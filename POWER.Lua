@@ -132,8 +132,12 @@ EventsSection:Button("Iniciar Evento Marítimo 2", function()
     print("Iniciando Evento Marítimo 2...")
 end)
 
--- Renderizar o menu
-Window:Render()
+-- Verificar se a biblioteca foi carregada corretamente antes de renderizar o menu
+if Window then
+    Window:Render()
+else
+    print("Erro ao carregar a biblioteca de GUI!")
+end
 
 -- Função para mensagem de debug
 function debugMessage(msg)
