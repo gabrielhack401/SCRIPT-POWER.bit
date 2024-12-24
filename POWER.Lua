@@ -1,5 +1,5 @@
--- Carregar a biblioteca de GUI para criar o menu
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/axstin/rbxui/master/source.lua"))()
+-- Carregar a biblioteca para criar o menu
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/sslox/vsync/main/source.lua"))()
 local Window = Library.new("POWER.bit - Ultimate Script")
 
 -- Exibir mensagem de boas-vindas no console
@@ -19,7 +19,7 @@ getgenv().Auto_Combo = false
 -- Função para Auto Farm
 local function autoFarm()
     while getgenv().Auto_Farm do
-        -- Adicionar a lógica do auto farm aqui
+        -- Lógica de Auto Farm
         print("Realizando Auto Farm...")
         wait(1)
     end
@@ -131,9 +131,6 @@ EventsSection:Button("Iniciar Evento Marítimo 2", function()
     -- Lógica de Evento Marítimo 2
     print("Iniciando Evento Marítimo 2...")
 end)
-
--- Espera 2 segundos para garantir que a biblioteca foi carregada corretamente
-wait(2)
 
 -- Renderizar o menu
 Window:Render()
