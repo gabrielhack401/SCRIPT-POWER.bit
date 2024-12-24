@@ -10,9 +10,11 @@ print("============================================")
 -- Ativar coleta automática de frutas
 local AutoFruitCollect = true
 
+-- Lista de cores de Haki (exemplo)
+local hakiColors = {"Black", "Purple", "Red", "Blue", "White", "Green"}
+
 -- Verificar se a fruta é do tipo Haki ou normal
 local function isHakiOrFruit(fruit)
-    local hakiColors = {"Black", "Purple", "Red", "Blue", "White", "Green"} -- Exemplos de cores de Haki
     if fruit.Name:match("Fruit") then
         return true
     end
@@ -45,7 +47,7 @@ local function collectFruits()
     end)
 end
 
--- Iniciar coleta automática de frutas
+-- Coletar frutas de forma contínua
 collectFruits()
 
 -- Mensagem Final
