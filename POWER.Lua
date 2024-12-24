@@ -33,170 +33,188 @@ local function createLabel(text, position, size)
     return label
 end
 
--- Função para exibir o menu principal
-local function showMenu()
-    -- Título do menu
-    createLabel("Blox Fruits Script", UDim2.new(0.5, -100, 0.1, 0), UDim2.new(0, 200, 0, 50))
-
-    -- Botões do menu principal
-    createButton("Coletar Frutas", UDim2.new(0.5, -100, 0.3, 0), UDim2.new(0, 200, 0, 50), function()
-        globalOptions.AutoFruitCollect = true  -- Deixa sempre no TRUE
-        collectFruits()  -- Inicia a coleta de frutas
-    end)
-
-    createButton("Coletar Frutas de Haki", UDim2.new(0.5, -100, 0.4, 0), UDim2.new(0, 200, 0, 50), function()
-        globalOptions.AutoHakiFruitCollect = true  -- Deixa sempre no TRUE
-        collectHakiFruits()  -- Inicia a coleta de frutas de Haki
-    end)
-
-    createButton("Auto Farm NPCs", UDim2.new(0.5, -100, 0.5, 0), UDim2.new(0, 200, 0, 50), function()
-        globalOptions.AutoFarm = true
-        farmNPCs()  -- Inicia o farming de NPCs
-    end)
-
-    createButton("Auto Quest", UDim2.new(0.5, -100, 0.6, 0), UDim2.new(0, 200, 0, 50), function()
-        globalOptions.AutoQuest = true
-        autoQuest()  -- Aceita as missões automaticamente
-    end)
-
-    createButton("Auto Dojo", UDim2.new(0.5, -100, 0.7, 0), UDim2.new(0, 200, 0, 50), function()
-        globalOptions.AutoDojo = true
-        autoDojo()  -- Executa o Auto Dojo
-    end)
-
-    createButton("Sair", UDim2.new(0.5, -100, 0.8, 0), UDim2.new(0, 200, 0, 50), function()
-        screenGui:Destroy()  -- Fecha o menu
-    end)
-end
-
--- Funções Globais e Configurações do Menu
+-- Configurações globais
 globalOptions = {
     AutoFarm = false,
     AutoQuest = false,
     AutoDojo = false,
-    AutoMar = false,
-    AutoCDK = false,
-    AutoTTK = false,
-    AutoFruitCollect = true,  -- Deixa sempre no TRUE
-    AutoHakiFruitCollect = true, -- Deixa sempre no TRUE
-    AutoBuso = false,
-    AutoObservation = false,
-    AutoClick = false
+    AutoFruitCollect = false,
+    AutoHakiFruitCollect = false,
+    AutoChestCollect = false,
+    AutoKillBoss = false,
+    VidaInf = false,
+    StaminaInf = false,
+    HakiObservacaoInf = false,
 }
 
--- Funções de coleta de frutas
+-- Funções de utilidade
 local function isHakiFruit(fruit)
     return fruit.Name:match("Haki") or fruit.Name:match("Fruit")
 end
 
+-- Funções de combate
+local function findAndKillBoss()
+    spawn(function()
+        while globalOptions.AutoKillBoss do
+            for _, boss in pairs(game.Workspace:GetChildren()) do
+                if boss:IsA("Model") and boss:FindFirstChild("Humanoid") and boss.Humanoid.Health > 0 then
+                    local player = game.Players.LocalPlayer
+                    local character = player.Character or player.CharacterAdded:Wait()
+
+                    -- Mover-se até o boss
+                    character:MoveTo(boss.HumanoidRootPart.Position)
+
+                    -- Simular ataque
+                    local tool = character:FindFirstChildOfClass("Tool")
+                    if tool then
+                        tool:Activate()
+                    else
+                        print("Nenhuma ferramenta encontrada para atacar.")
+                    end
+                    print("Atacando o boss: " .. boss.Name)
+                end
+            end
+            wait(1) -- Intervalo entre ataques
+        end
+    end)
+end
+
+-- Função para coletar frutas
 local function collectFruits()
     spawn(function()
         while globalOptions.AutoFruitCollect do
             for _, fruit in pairs(game.Workspace:GetChildren()) do
-                if fruit:IsA("Model") and isHakiFruit(fruit) and fruit:FindFirstChild("Hitbox") then
+                if fruit:IsA("Model") and fruit:FindFirstChild("Hitbox") then
                     fireclickdetector(fruit.Hitbox)
                     print("Fruta coletada: " .. fruit.Name)
-                    game:GetService("StarterGui"):SetCore("SendNotification", {
-                        Title = "Fruta Coletada",
-                        Text = fruit.Name,
-                        Duration = 5,
-                    })
                 end
             end
-            wait(1)  -- Verifica a cada 1 segundo
+            wait(1)
         end
     end)
 end
 
+-- Função para coletar frutas de Haki
 local function collectHakiFruits()
     spawn(function()
         while globalOptions.AutoHakiFruitCollect do
             for _, fruit in pairs(game.Workspace:GetChildren()) do
-                if fruit:IsA("Model") and fruit:FindFirstChild("Hitbox") and fruit.BrickColor == BrickColor.new("Bright yellow") then
+                if fruit:IsA("Model") and isHakiFruit(fruit) and fruit:FindFirstChild("Hitbox") then
                     fireclickdetector(fruit.Hitbox)
                     print("Fruta de Haki coletada: " .. fruit.Name)
-                    game:GetService("StarterGui"):SetCore("SendNotification", {
-                        Title = "Fruta de Haki Coletada",
-                        Text = fruit.Name,
-                        Duration = 5,
-                    })
                 end
             end
-            wait(1)  -- Verifica a cada 1 segundo
-        end
-    end)
-end
-
--- Funções de Farming e Missões
-local function farmNPCs()
-    spawn(function()
-        while globalOptions.AutoFarm do
-            print("Farming NPCs...")
             wait(1)
         end
     end)
 end
 
-local function autoQuest()
+-- Função de coleta de baús
+local function collectChests()
     spawn(function()
-        while globalOptions.AutoQuest do
-            print("Aceitando missões automaticamente...")
+        while globalOptions.AutoChestCollect do
+            for _, chest in pairs(game.Workspace:GetChildren()) do
+                if chest:IsA("Model") and chest:FindFirstChild("TouchInterest") then
+                    fireclickdetector(chest.TouchInterest)
+                    print("Baú coletado: " .. chest.Name)
+                end
+            end
             wait(1)
         end
     end)
 end
 
-local function autoDojo()
+-- Função para ativar vida infinita
+local function activateVidaInf()
     spawn(function()
-        while globalOptions.AutoDojo do
-            print("Executando Auto Dojo...")
-            wait(5)
+        while globalOptions.VidaInf do
+            local player = game.Players.LocalPlayer
+            local character = player.Character or player.CharacterAdded:Wait()
+            if character:FindFirstChild("Humanoid") then
+                character.Humanoid.Health = character.Humanoid.MaxHealth
+            end
+            wait(0.1)
         end
     end)
 end
 
--- Funções de Eventos e CDK
-local function autoMar()
+-- Função para ativar stamina infinita
+local function activateStaminaInf()
     spawn(function()
-        while globalOptions.AutoMar do
-            print("Participando de eventos marítimos...")
-            wait(5)
+        while globalOptions.StaminaInf do
+            local player = game.Players.LocalPlayer
+            local character = player.Character or player.CharacterAdded:Wait()
+            if character:FindFirstChild("Humanoid") then
+                -- Ajuste de stamina infinita (simulado aqui)
+                -- Adicionar lógica de stamina infinita se possível
+            end
+            wait(0.1)
         end
     end)
 end
 
-local function autoCDK()
+-- Função para ativar Haki da Observação infinito
+local function activateHakiObservacaoInf()
     spawn(function()
-        while globalOptions.AutoCDK do
-            print("Obtendo CDK automaticamente...")
-            wait(5)
+        while globalOptions.HakiObservacaoInf do
+            -- Adicionar lógica de Haki da Observação infinito
+            -- Pode ser uma habilidade que aumenta o campo de visão ou ativa habilidade especial
+            wait(0.1)
         end
     end)
 end
 
-local function autoTTK()
-    spawn(function()
-        while globalOptions.AutoTTK do
-            print("Obtendo TTK automaticamente...")
-            wait(5)
+-- Função para exibir o menu
+local function showMenu()
+    createLabel("Blox Fruits Script", UDim2.new(0.5, -100, 0.1, 0), UDim2.new(0, 200, 0, 50))
+
+    createButton("Coletar Frutas", UDim2.new(0.5, -100, 0.3, 0), UDim2.new(0, 200, 0, 50), function()
+        globalOptions.AutoFruitCollect = not globalOptions.AutoFruitCollect
+        collectFruits()
+    end)
+
+    createButton("Coletar Frutas de Haki", UDim2.new(0.5, -100, 0.4, 0), UDim2.new(0, 200, 0, 50), function()
+        globalOptions.AutoHakiFruitCollect = not globalOptions.AutoHakiFruitCollect
+        collectHakiFruits()
+    end)
+
+    createButton("Coletar Baús", UDim2.new(0.5, -100, 0.5, 0), UDim2.new(0, 200, 0, 50), function()
+        globalOptions.AutoChestCollect = not globalOptions.AutoChestCollect
+        collectChests()
+    end)
+
+    createButton("Auto Kill Boss", UDim2.new(0.5, -100, 0.6, 0), UDim2.new(0, 200, 0, 50), function()
+        globalOptions.AutoKillBoss = not globalOptions.AutoKillBoss
+        findAndKillBoss()
+    end)
+
+    createButton("Vida Inf", UDim2.new(0.5, -100, 0.7, 0), UDim2.new(0, 200, 0, 50), function()
+        globalOptions.VidaInf = not globalOptions.VidaInf
+        if globalOptions.VidaInf then
+            activateVidaInf()
         end
+    end)
+
+    createButton("Stamina Inf", UDim2.new(0.5, -100, 0.8, 0), UDim2.new(0, 200, 0, 50), function()
+        globalOptions.StaminaInf = not globalOptions.StaminaInf
+        if globalOptions.StaminaInf then
+            activateStaminaInf()
+        end
+    end)
+
+    createButton("Haki da Observação Inf", UDim2.new(0.5, -100, 0.9, 0), UDim2.new(0, 200, 0, 50), function()
+        globalOptions.HakiObservacaoInf = not globalOptions.HakiObservacaoInf
+        if globalOptions.HakiObservacaoInf then
+            activateHakiObservacaoInf()
+        end
+    end)
+
+    createButton("Fechar Menu", UDim2.new(0.5, -100, 1.0, 0), UDim2.new(0, 200, 0, 50), function()
+        screenGui:Destroy()
     end)
 end
 
--- Configurações de Buso e Instinto
-local function autoBuso()
-    print("Ativando Buso automaticamente...")
-end
-
-local function autoObservation()
-    print("Ativando Instinto automaticamente...")
-end
-
-local function autoClick()
-    print("Auto Click ativado!")
-end
-
--- Exibe o menu na tela
+-- Exibe o menu
 showMenu()
 
 -- Finalização
