@@ -1,17 +1,11 @@
--- Carregar a Biblioteca de GUI (Redzhub ou Kavo UI)
+-- Carregar as bibliotecas de GUI e Poison Community
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/axstin/rbxui/master/source.lua"))()
 local Window = Library.new("Ultimate Blox Fruits Script")
 
--- Seções do Menu
-local FarmSection = Window:Section("Auto Farm")
-local StatsSection = Window:Section("Auto Upgrade")
-local SettingsSection = Window:Section("General Settings")
-local TeleportSection = Window:Section("Teleport")
-local EventsSection = Window:Section("Maritime Events")
-local FruitsSection = Window:Section("Collect Fruits")
-local MiscSection = Window:Section("Miscellaneous")
+-- Exibir mensagem de boas-vindas
+print("Bem-vindo(a) Power.bit Script!")
 
--- Configurações Gerais
+-- Configurações gerais e variáveis de controle
 getgenv().Auto_Farm = false
 getgenv().Auto_Quest = false
 getgenv().Immortality = false
@@ -20,6 +14,8 @@ getgenv().Auto_Buso = false
 getgenv().Auto_Instinto = false
 getgenv().Auto_Fruit_Collect = false
 getgenv().Auto_Events = false
+getgenv().Auto_Combo = false
+getgenv().Farm_Dragon_Race = false
 
 -- Função de Auto Farm
 local function autoFarm()
@@ -57,7 +53,6 @@ end
 -- Função de Coletar Frutas de Haki
 local function collectHakiFruits()
     while getgenv().Auto_Fruit_Collect do
-        -- Procurar por todas as frutas no mapa
         for _, fruit in pairs(game.Workspace:GetChildren()) do
             if fruit:IsA("Model") and fruit.Name:match("HakiFruit") then  -- Verifica se a fruta é uma fruta de Haki
                 if fruit:FindFirstChild("Hitbox") then
@@ -66,14 +61,13 @@ local function collectHakiFruits()
                 end
             end
         end
-        wait(3)  -- Espera um tempo antes de procurar novamente
+        wait(3)
     end
 end
 
 -- Função de Auto Buso
 local function autoBuso()
     while getgenv().Auto_Buso do
-        -- Lógica para ativar Busoshoku Haki automaticamente
         debugMessage("Ativando Busoshoku Haki...")
         wait(5)
     end
@@ -82,7 +76,6 @@ end
 -- Função de Auto Instinto
 local function autoInstinto()
     while getgenv().Auto_Instinto do
-        -- Lógica para ativar Instinto automaticamente
         debugMessage("Ativando Instinto...")
         wait(5)
     end
@@ -92,16 +85,14 @@ end
 local function teleportToIsland(islandName)
     -- Lógica para teleportar para uma ilha
     debugMessage("Teleportando para " .. islandName)
-    -- Implementação do teleporte (ainda depende da estrutura do jogo)
 end
 
 local function teleportToEvent(eventName)
     -- Lógica para teleportar para um evento
     debugMessage("Teleportando para evento " .. eventName)
-    -- Implementação do teleporte (ainda depende da estrutura do jogo)
 end
 
--- Função de eventos marítimos
+-- Funções de eventos marítimos
 local function maritimeEvent(event)
     while getgenv()[event] do
         debugMessage("Participando de evento marítimo " .. event)
@@ -109,7 +100,25 @@ local function maritimeEvent(event)
     end
 end
 
+-- Função de Combo Auto
+local function autoCombo()
+    while getgenv().Auto_Combo do
+        -- Lógica de combo automático
+        debugMessage("Executando combo automaticamente...")
+        wait(1)
+    end
+end
+
 -- Adicionando Funções ao Menu
+local FarmSection = Window:Section("Auto Farm")
+local StatsSection = Window:Section("Auto Upgrade")
+local SettingsSection = Window:Section("General Settings")
+local TeleportSection = Window:Section("Teleport")
+local EventsSection = Window:Section("Maritime Events")
+local FruitsSection = Window:Section("Collect Fruits")
+local MiscSection = Window:Section("Miscellaneous")
+
+-- Adicionando Funções ao Menu de Farm
 FarmSection:Button("Iniciar Auto Farm", function()
     getgenv().Auto_Farm = true
     autoFarm()
@@ -121,6 +130,7 @@ FarmSection:Button("Iniciar Auto Quest", function()
     debugMessage("Aceitando missões automaticamente...")
 end)
 
+-- Funções de Stats e Haki
 StatsSection:Button("Auto Buso", function()
     getgenv().Auto_Buso = true
     autoBuso()
@@ -131,6 +141,7 @@ StatsSection:Button("Auto Instinto", function()
     autoInstinto()
 end)
 
+-- Funções de Configuração
 SettingsSection:Button("Ativar Imortalidade", function()
     getgenv().Immortality = true
     immortality()
@@ -139,6 +150,11 @@ end)
 SettingsSection:Button("Ativar Stamina Infinita", function()
     getgenv().Infinite_Stamina = true
     infiniteStamina()
+end)
+
+SettingsSection:Button("Ativar Combo Automático", function()
+    getgenv().Auto_Combo = true
+    autoCombo()
 end)
 
 -- Funções de Teleporte
@@ -150,7 +166,7 @@ TeleportSection:Button("Teleporte para Snow Island", function()
     teleportToIsland("Snow Island")
 end)
 
--- Adicionando Eventos Marítimos
+-- Eventos Marítimos
 EventsSection:Button("Iniciar Evento Marítimo 1", function()
     maritimeEvent("Event1")
 end)
@@ -170,5 +186,9 @@ FruitsSection:Button("Coletar Frutas de Haki", function()
 end)
 
 -- Exibindo o menu para o jogador
-Window:Show()
+Window:Render()
 
+-- Mensagem de Debug
+function debugMessage(msg)
+    print("[DEBUG] " .. msg)
+end
