@@ -7,31 +7,20 @@ print("============================================")
 print("BEM VINDO(A) A POWER.bit SCRIPT!")
 print("============================================")
 
--- Tabs do Menu
-local FarmingTab = Window:NewTab("Farming")
-local EventTab = Window:NewTab("Eventos")
-local WeaponTab = Window:NewTab("Armas")
-local SettingsTab = Window:NewTab("Configurações")
-
--- Variáveis Globais
-globalOptions = {
-    AutoFarm = false,
-    AutoQuest = false,
-    AutoDojo = false,
-    AutoMar = false,
-    AutoCDK = false,
-    AutoTTK = false,
-    AutoSoulGuitar = false,
-    AutoNewWeapon = false,
-    AutoObservation = false,
-    AutoBuso = false,
-    AutoClick = false,
-    AutoFruitCollect = true, -- Adicionando a opção para coletar frutas automaticamente
+-- Função de Carregar o Redz Hub (Adaptado para Blox Fruits)
+local RedzHub = {
+    isActive = true, -- Redz Hub ativo por padrão
+    version = "v1.0", -- Versão do script
+    hubName = "Redz Hub - Blox Fruits",
 }
 
--- Funções Gerais
-local function debugMessage(message)
-    print("[DEBUG] " .. message)
+-- Função para exibir informações do Redz Hub
+local function displayRedzHubInfo()
+    print("============================================")
+    print("Bem-vindo ao " .. RedzHub.hubName)
+    print("Versão: " .. RedzHub.version)
+    print("Ativado: " .. tostring(RedzHub.isActive))
+    print("============================================")
 end
 
 -- Função para verificar se a fruta é do tipo Haki ou normal
@@ -63,6 +52,14 @@ local function collectFruits()
             wait(1) -- Espera de 1 segundo antes de verificar novamente
         end
     end)
+end
+
+-- Função para coletar informações sobre eventos, armas e outras ações
+local function displayEventInfo()
+    print("============================================")
+    print("Eventos e Armas no " .. RedzHub.hubName)
+    print("============================================")
+    -- Colocar aqui as funções de eventos ou armas adicionais
 end
 
 -- Funções de Farming e outras opções
@@ -180,6 +177,9 @@ Library.MakeDraggable(Window)
 if globalOptions.AutoFruitCollect then
     collectFruits()
 end
+
+-- Exibir informações do Redz Hub
+displayRedzHubInfo()
 
 -- Finalização
 debugMessage("Script carregado com sucesso!")
