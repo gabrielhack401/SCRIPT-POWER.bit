@@ -19,9 +19,9 @@ globalOptions = {
     AutoTTK = false,
     AutoFruitCollect = true,  -- Deixa sempre no TRUE
     AutoHakiFruitCollect = true, -- Deixa sempre no TRUE para frutas de Haki
-    AutoBuso = false,
-    AutoObservation = false,
-    AutoClick = false
+    AutoBuso = true,
+    AutoObservation = true,
+    AutoClick = true
 }
 
 -- Verificar se a fruta é do tipo Haki ou normal
