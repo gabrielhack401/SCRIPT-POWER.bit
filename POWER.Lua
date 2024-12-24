@@ -155,5 +155,49 @@ local function autoDojo()
     end)
 end
 
+-- Funções de Eventos e CDK
+local function autoMar()
+    spawn(function()
+        while globalOptions.AutoMar do
+            print("Participando de eventos marítimos...")
+            wait(5)
+        end
+    end)
+end
+
+local function autoCDK()
+    spawn(function()
+        while globalOptions.AutoCDK do
+            print("Obtendo CDK automaticamente...")
+            wait(5)
+        end
+    end)
+end
+
+local function autoTTK()
+    spawn(function()
+        while globalOptions.AutoTTK do
+            print("Obtendo TTK automaticamente...")
+            wait(5)
+        end
+    end)
+end
+
+-- Configurações de Buso e Instinto
+local function autoBuso()
+    print("Ativando Buso automaticamente...")
+end
+
+local function autoObservation()
+    print("Ativando Instinto automaticamente...")
+end
+
+local function autoClick()
+    print("Auto Click ativado!")
+end
+
 -- Exibe o menu na tela
 showMenu()
+
+-- Finalização
+print("Script carregado com sucesso!")
