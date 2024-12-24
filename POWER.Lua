@@ -1,6 +1,6 @@
--- Carregar Biblioteca de GUI
+-- Carregar a Biblioteca de GUI (Redzhub ou Kavo UI)
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/axstin/rbxui/master/source.lua"))()
-local Window = Library.new("Blox Fruits Ultimate Script")
+local Window = Library.new("Ultimate Blox Fruits Script")
 
 -- Seções do Menu
 local FarmSection = Window:Section("Auto Farm")
@@ -9,6 +9,7 @@ local SettingsSection = Window:Section("General Settings")
 local TeleportSection = Window:Section("Teleport")
 local EventsSection = Window:Section("Maritime Events")
 local FruitsSection = Window:Section("Collect Fruits")
+local MiscSection = Window:Section("Miscellaneous")
 
 -- Configurações Gerais
 getgenv().Auto_Farm = false
@@ -18,6 +19,7 @@ getgenv().Infinite_Stamina = false
 getgenv().Auto_Buso = false
 getgenv().Auto_Instinto = false
 getgenv().Auto_Fruit_Collect = false
+getgenv().Auto_Events = false
 
 -- Função de Auto Farm
 local function autoFarm()
