@@ -1,9 +1,9 @@
 -- Carregar a biblioteca de GUI para criar o menu
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/axstin/rbxui/master/source.lua"))()
-local Window = Library.new("Power.bit - Ultimate Script")
+local Window = Library.new("POWER.bit - Ultimate Script")
 
 -- Exibir mensagem de boas-vindas no console
-print("Bem-vindo(a) Power.bit Script!")
+print("Bem-vindo(a) POWER.bit Script!")
 
 -- Variáveis de controle
 getgenv().Auto_Farm = false
