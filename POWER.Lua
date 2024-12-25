@@ -105,117 +105,215 @@ local function collectHakiFruits()
                 end
             end
             wait(1)
-        end
-    end)
+-- Biblioteca de GUI
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+local Window = Library.CreateLib("Blox Fruits Script", "DarkTheme")
+
+-- Tabs do Menu
+local FarmingTab = Window:NewTab("Farming")
+local EventTab = Window:NewTab("Eventos")
+local WeaponTab = Window:NewTab("Armas")
+local SettingsTab = Window:NewTab("Configurações")
+
+-- Variáveis Globais
+globalOptions = {
+    AutoFarm = false,
+    AutoQuest = false,
+    AutoDojo = false,
+    AutoMar = false,
+    AutoCDK = false,
+    AutoTTK = false,
+    AutoSoulGuitar = false,
+    AutoNewWeapon = false,
+    AutoObservation = false,
+    AutoBuso = false,
+    AutoClick = false,
+}
+
+-- Funções Gerais
+local function debugMessage(message)
+    print("[DEBUG] " .. message)
 end
 
--- Função de coleta de baús
-local function collectChests()
+-- Função para mover o jogador até um NPC
+local function moveToNPC(npc)
+    local player = game.Players.LocalPlayer
+    local character = player.Character
+
+    if character and npc then
+        local hrp = character:FindFirstChild("HumanoidRootPart")
+        if hrp then
+            hrp.CFrame = npc.CFrame + Vector3.new(0, 10, 0) -- Voa acima do NPC
+        end
+    end
+end
+
+-- Função para atacar NPC
+local function attackNPC(npc)
+    if globalOptions.AutoClick then
+        local tool = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool")
+        if tool and npc then
+            tool:Activate()
+        end
+    end
+end
+
+-- Função de Farmar NPCs com base no nível do jogador
+local function farmNPCs()
     spawn(function()
-        while globalOptions.AutoChestCollect do
-            for _, chest in pairs(game.Workspace:GetChildren()) do
-                if chest:IsA("Model") and chest:FindFirstChild("TouchInterest") then
-                    fireclickdetector(chest.TouchInterest)
-                    print("Baú coletado: " .. chest.Name)
+        while globalOptions.AutoFarm do
+            local player = game.Players.LocalPlayer
+            local level = player.Data.Level.Value
+            local currentIsland = getIslandByLevel(level)
+
+            if currentIsland then
+                moveToIsland(currentIsland)
+                local npc = findEnemyOnIsland(currentIsland, level)
+                if npc then
+                    moveToNPC(npc)
+                    attackNPC(npc)
                 end
             end
+
             wait(1)
         end
     end)
 end
 
--- Função para ativar vida infinita
-local function activateVidaInf()
+-- Função de Auto Quest
+local function autoQuest()
     spawn(function()
-        while globalOptions.VidaInf do
+        while globalOptions.AutoQuest do
             local player = game.Players.LocalPlayer
-            local character = player.Character or player.CharacterAdded:Wait()
-            if character:FindFirstChild("Humanoid") then
-                character.Humanoid.Health = character.Humanoid.MaxHealth
+            local level = player.Data.Level.Value
+            local quest = getQuestByLevel(level)
+
+            if quest then
+                acceptQuest(quest)
+                completeQuest(quest)
             end
-            wait(0.1)
+
+            wait(1)
         end
     end)
 end
 
--- Função para ativar stamina infinita
-local function activateStaminaInf()
+-- Funções para Auto Dojo
+local function autoDojo()
     spawn(function()
-        while globalOptions.StaminaInf do
-            local player = game.Players.LocalPlayer
-            local character = player.Character or player.CharacterAdded:Wait()
-            if character:FindFirstChild("Humanoid") then
-                -- Ajuste de stamina infinita (simulado aqui)
-                -- Adicionar lógica de stamina infinita se possível
-            end
-            wait(0.1)
+        while globalOptions.AutoDojo do
+            completeDojoQuests()
+            wait(5)
         end
     end)
 end
 
--- Função para ativar Haki da Observação infinito
-local function activateHakiObservacaoInf()
+-- Funções para Auto Mar
+local function autoMar()
     spawn(function()
-        while globalOptions.HakiObservacaoInf do
-            -- Adicionar lógica de Haki da Observação infinito
-            -- Pode ser uma habilidade que aumenta o campo de visão ou ativa habilidade especial
-            wait(0.1)
+        while globalOptions.AutoMar do
+            participateInSeaEvents()
+            wait(5)
         end
     end)
 end
 
--- Função para exibir o menu
-local function showMenu()
-    createLabel("Blox Fruits Script", UDim2.new(0.5, -100, 0.1, 0), UDim2.new(0, 200, 0, 50))
-
-    createButton("Coletar Frutas", UDim2.new(0.5, -100, 0.3, 0), UDim2.new(0, 200, 0, 50), function()
-        globalOptions.AutoFruitCollect = not globalOptions.AutoFruitCollect
-        collectFruits()
-    end)
-
-    createButton("Coletar Frutas de Haki", UDim2.new(0.5, -100, 0.4, 0), UDim2.new(0, 200, 0, 50), function()
-        globalOptions.AutoHakiFruitCollect = not globalOptions.AutoHakiFruitCollect
-        collectHakiFruits()
-    end)
-
-    createButton("Coletar Baús", UDim2.new(0.5, -100, 0.5, 0), UDim2.new(0, 200, 0, 50), function()
-        globalOptions.AutoChestCollect = not globalOptions.AutoChestCollect
-        collectChests()
-    end)
-
-    createButton("Auto Kill Boss", UDim2.new(0.5, -100, 0.6, 0), UDim2.new(0, 200, 0, 50), function()
-        globalOptions.AutoKillBoss = not globalOptions.AutoKillBoss
-        findAndKillBoss()
-    end)
-
-    createButton("Vida Inf", UDim2.new(0.5, -100, 0.7, 0), UDim2.new(0, 200, 0, 50), function()
-        globalOptions.VidaInf = not globalOptions.VidaInf
-        if globalOptions.VidaInf then
-            activateVidaInf()
+-- Funções para Auto CDK/TTK/Soul Guitar/Armas Novas
+local function autoCDK()
+    spawn(function()
+        while globalOptions.AutoCDK do
+            collectCDKParts()
+            assembleCDK()
+            wait(5)
         end
-    end)
-
-    createButton("Stamina Inf", UDim2.new(0.5, -100, 0.8, 0), UDim2.new(0, 200, 0, 50), function()
-        globalOptions.StaminaInf = not globalOptions.StaminaInf
-        if globalOptions.StaminaInf then
-            activateStaminaInf()
-        end
-    end)
-
-    createButton("Haki da Observação Inf", UDim2.new(0.5, -100, 0.9, 0), UDim2.new(0, 200, 0, 50), function()
-        globalOptions.HakiObservacaoInf = not globalOptions.HakiObservacaoInf
-        if globalOptions.HakiObservacaoInf then
-            activateHakiObservacaoInf()
-        end
-    end)
-
-    createButton("Fechar Menu", UDim2.new(0.5, -100, 1.0, 0), UDim2.new(0, 200, 0, 50), function()
-        screenGui:Destroy()
     end)
 end
 
--- Exibe o menu
-showMenu()
+local function autoTTK()
+    spawn(function()
+        while globalOptions.AutoTTK do
+            completeTTKQuests()
+            wait(5)
+        end
+    end)
+end
+
+local function autoSoulGuitar()
+    spawn(function()
+        while globalOptions.AutoSoulGuitar do
+            farmSoulEssence()
+            craftSoulGuitar()
+            wait(5)
+        end
+    end)
+end
+
+local function autoNewWeapon()
+    spawn(function()
+        while globalOptions.AutoNewWeapon do
+            obtainNewWeapon()
+            wait(5)
+        end
+    end)
+end
+
+-- Adicionando Opções ao Menu
+local FarmingSection = FarmingTab:NewSection("Farming")
+FarmingSection:NewToggle("Auto Farm", "Farmar NPCs automaticamente", function(state)
+    globalOptions.AutoFarm = state
+    if state then farmNPCs() end
+end)
+
+FarmingSection:NewToggle("Auto Quest", "Aceitar missões automaticamente", function(state)
+    globalOptions.AutoQuest = state
+    if state then autoQuest() end
+end)
+
+FarmingSection:NewToggle("Auto Dojo", "Completar missões de dojo automaticamente", function(state)
+    globalOptions.AutoDojo = state
+    if state then autoDojo() end
+end)
+
+local EventSection = EventTab:NewSection("Eventos")
+EventSection:NewToggle("Auto Mar", "Participar de eventos marítimos automaticamente", function(state)
+    globalOptions.AutoMar = state
+    if state then autoMar() end
+end)
+
+local WeaponSection = WeaponTab:NewSection("Armas e Itens")
+WeaponSection:NewToggle("Auto CDK", "Obter CDK automaticamente", function(state)
+    globalOptions.AutoCDK = state
+    if state then autoCDK() end
+end)
+
+WeaponSection:NewToggle("Auto TTK", "Obter TTK automaticamente", function(state)
+    globalOptions.AutoTTK = state
+    if state then autoTTK() end
+end)
+
+WeaponSection:NewToggle("Auto Soul Guitar", "Obter Soul Guitar automaticamente", function(state)
+    globalOptions.AutoSoulGuitar = state
+    if state then autoSoulGuitar() end
+end)
+
+WeaponSection:NewToggle("Auto Nova Arma", "Obter nova arma automaticamente", function(state)
+    globalOptions.AutoNewWeapon = state
+    if state then autoNewWeapon() end
+end)
+
+local SettingsSection = SettingsTab:NewSection("Configurações")
+SettingsSection:NewToggle("Auto Buso", "Ativar Buso automaticamente", function(state)
+    globalOptions.AutoBuso = state
+end)
+
+SettingsSection:NewToggle("Auto Instinto", "Ativar Instinto automaticamente", function(state)
+    globalOptions.AutoObservation = state
+end)
+
+SettingsSection:NewToggle("Auto Click", "Ativar Auto Click", function(state)
+    globalOptions.AutoClick = state
+end)
 
 -- Finalização
-print("Script carregado com sucesso!")
+debugMessage("Script carregado com sucesso!")
+t carregado com sucesso!")
