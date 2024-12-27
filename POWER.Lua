@@ -25,16 +25,25 @@ game:GetService("StarterGui"):SetCore("SendNotification", {
 local menu = game:GetService("CoreGui"):WaitForChild("RobloxGui"):WaitForChild("ScreenGui"):WaitForChild("Frame")
 menu.Name = "POWER.bit"
 
--- Configuração do Menu com a Biblioteca de GUI
+-- Biblioteca de GUI
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
-local Window = Library.CreateLib("Blox Fruits Menu", "DarkTheme")
+local Window = Library.CreateLib("Blox Fruits Ultimate Script", "DarkTheme")
 
 -- Seções do Menu
 local FarmTab = Window:NewTab("Farm")
 local FarmSection = FarmTab:NewSection("Farm Options")
 
+local StatsTab = Window:NewTab("Stats")
+local StatsSection = StatsTab:NewSection("Auto Upgrade")
+
+local SettingsTab = Window:NewTab("Settings")
+local SettingsSection = SettingsTab:NewSection("General Settings")
+
 local TeleportTab = Window:NewTab("Teleport")
 local TeleportSection = TeleportTab:NewSection("Teleport Options")
+
+local EventsTab = Window:NewTab("Events")
+local EventsSection = EventsTab:NewSection("Maritime Events")
 
 -- Configurações de Tema
 getgenv().SettingTheme = {
