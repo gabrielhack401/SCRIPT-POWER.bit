@@ -1,1 +1,1 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/gabrielhack401/SCRIPT-POWER.bit/28e2f271d64382b6595bc7ea647f51457a4fb668/POWER.Lua"))()
+loadstring(game:HttpGet("https://github.com/gabrielhack401/SCRIPT-POWER.bit/blob/main/POWER.Lua"))()
