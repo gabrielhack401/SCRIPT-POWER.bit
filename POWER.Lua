@@ -15,7 +15,7 @@ loadScript()
 
 -- Mensagem de boas-vindas
 game:GetService("StarterGui"):SetCore("SendNotification", {
-    Title = "Blox Fruits",
+    Title = "POWER.bit SCRIPTS",  -- Título alterado
     Text = "BEM VINDO A POWER.bit SCRIPTS!",
     Icon = "rbxassetid://123456789",  -- Insira o ID da imagem do ícone, se desejado
     Duration = 5  -- Duração da notificação em segundos
@@ -27,11 +27,11 @@ menu.Name = "POWER.bit"
 
 -- Biblioteca de GUI
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
-local Window = Library.CreateLib("Blox Fruits Ultimate Script", "DarkTheme")
+local Window = Library.CreateLib("POWER.bit SCRIPTS", "DarkTheme")  -- Título alterado
 
 -- Seções do Menu
-local FarmTab = Window:NewTab("Farm")
-local FarmSection = FarmTab:NewSection("Farm Options")
+local PrisonTab = Window:NewTab("Prison")
+local PrisonSection = PrisonTab:NewSection("Prison Escape Options")
 
 local StatsTab = Window:NewTab("Stats")
 local StatsSection = StatsTab:NewSection("Auto Upgrade")
@@ -43,7 +43,7 @@ local TeleportTab = Window:NewTab("Teleport")
 local TeleportSection = TeleportTab:NewSection("Teleport Options")
 
 local EventsTab = Window:NewTab("Events")
-local EventsSection = EventsTab:NewSection("Maritime Events")
+local EventsSection = EventsTab:NewSection("Prison Events")
 
 -- Configurações de Tema
 getgenv().SettingTheme = {
@@ -58,53 +58,53 @@ getgenv().SettingTheme = {
 }
 
 -- Funções e opções do menu
--- Exemplo de função de Auto Farm
-getgenv().Auto_Farm = false
-local function autoFarm()
+-- Exemplo de função de Auto Escape (Escapar da prisão)
+getgenv().Auto_Escape = false
+local function autoEscape()
     spawn(function()
-        while getgenv().Auto_Farm do
-            print("Farmando...")
+        while getgenv().Auto_Escape do
+            print("Escapando da prisão...")
             wait(2)
         end
     end)
 end
 
-FarmSection:NewToggle("Auto Farm", "Farmar inimigos automaticamente", function(state)
-    getgenv().Auto_Farm = state
-    if state then autoFarm() end
+PrisonSection:NewToggle("Auto Escape", "Escapar automaticamente da prisão", function(state)
+    getgenv().Auto_Escape = state
+    if state then autoEscape() end
 end)
 
 -- Funções de Teleporte
-local islands = {
-    {name = "Starter Island", position = Vector3.new(0, 0, 0)},
-    {name = "Snow Island", position = Vector3.new(2000, 0, 2000)},
+local locations = {
+    {name = "Prison Entrance", position = Vector3.new(0, 0, 0)},
+    {name = "Criminal Base", position = Vector3.new(2000, 0, 2000)},
 }
 
-local function teleportToIsland(islandName)
-    for _, island in ipairs(islands) do
-        if island.name == islandName then
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(island.position)
-            print("Teletransportando para a ilha:", islandName)
+local function teleportToLocation(locationName)
+    for _, location in ipairs(locations) do
+        if location.name == locationName then
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(location.position)
+            print("Teletransportando para:", locationName)
             return
         end
     end
-    print("Ilha não encontrada:", islandName)
+    print("Localização não encontrada:", locationName)
 end
 
-TeleportSection:NewButton("Teleporte para Starter Island", "Teleportar para a Ilha Starter", function()
-    teleportToIsland("Starter Island")
+TeleportSection:NewButton("Teleporte para Prison Entrance", "Teleportar para a entrada da prisão", function()
+    teleportToLocation("Prison Entrance")
 end)
 
-TeleportSection:NewButton("Teleporte para Snow Island", "Teleportar para a Ilha Snow", function()
-    teleportToIsland("Snow Island")
+TeleportSection:NewButton("Teleporte para Criminal Base", "Teleportar para a base dos criminosos", function()
+    teleportToLocation("Criminal Base")
 end)
 
--- Funções de Auto Haki
+-- Funções de Auto Haki (ou habilidade especial no Jailbreak)
 local function autoHaki()
     spawn(function()
         while getgenv().Auto_Haki do
-            -- Código para ativar Haki automaticamente
-            print("Haki ativado automaticamente!")
+            -- Código para ativar habilidade especial automaticamente
+            print("Habilidade especial ativada!")
             wait(2)
         end
     end)
@@ -114,14 +114,14 @@ end
 local function autoInstinct()
     spawn(function()
         while getgenv().Auto_Instinct do
-            -- Código para ativar o Instinto automaticamente
+            -- Código para ativar Instinto automaticamente
             print("Instinto ativado automaticamente!")
             wait(2)
         end
     end)
 end
 
--- Função de Auto Skills
+-- Função de Auto Skills (habilidades)
 local function autoSkills()
     spawn(function()
         while getgenv().Auto_Skills do
@@ -132,18 +132,7 @@ local function autoSkills()
     end)
 end
 
--- Função de Auto Devil Fruit
-local function autoDevilFruit()
-    spawn(function()
-        while getgenv().Auto_Devil_Fruit do
-            -- Código para consumir a Devil Fruit automaticamente
-            print("Consumindo Devil Fruit automaticamente!")
-            wait(2)
-        end
-    end)
-end
-
--- Função de Auto Quests
+-- Função de Auto Quests (Missões)
 local function autoQuest()
     spawn(function()
         while getgenv().Auto_Quest do
@@ -154,18 +143,18 @@ local function autoQuest()
     end)
 end
 
--- Função de Auto Boss Farm
+-- Função de Auto Boss Farm (Farming de Chefes)
 local function autoBossFarm()
     spawn(function()
         while getgenv().Auto_Boss_Farm do
-            -- Código para farmar bosses automaticamente
-            print("Farmando Bosses automaticamente...")
+            -- Código para farmar chefes automaticamente
+            print("Farmando Chefes automaticamente...")
             wait(5)
         end
     end)
 end
 
--- Função de Auto PVP
+-- Função de Auto PVP (Combate contra jogadores)
 local function autoPVP()
     spawn(function()
         while getgenv().Auto_PVP do
@@ -176,7 +165,7 @@ local function autoPVP()
     end)
 end
 
--- Função de Auto Chat
+-- Função de Auto Chat (Envio de mensagens)
 local function autoChat()
     spawn(function()
         while getgenv().Auto_Chat do
@@ -187,7 +176,7 @@ local function autoChat()
     end)
 end
 
--- Função de Auto Pickup Itens
+-- Função de Auto Pickup Itens (Coletando itens)
 local function autoPickupItems()
     spawn(function()
         while getgenv().Auto_Pickup_Items do
@@ -198,69 +187,48 @@ local function autoPickupItems()
     end)
 end
 
--- Função de Auto Click para Devil Fruit
-local function autoDevilFruitClick()
-    spawn(function()
-        while getgenv().Auto_Devil_Fruit_Click do
-            -- Código para clicar em itens como frutas ou outras coisas no jogo
-            print("Clicando para pegar Devil Fruit automaticamente!")
-            wait(0.1)
-        end
-    end)
-end
-
--- Menu de Farm
-FarmSection:NewToggle("Farm Dragon Race", "Farmar para raça Dragão", function(state)
-    getgenv().Farm_Dragon_Race = state
-    if state then autoFarm() end
+-- Menu de Escape
+PrisonSection:NewToggle("Auto Escape", "Escapar automaticamente da prisão", function(state)
+    getgenv().Auto_Escape = state
+    if state then autoEscape() end
 end)
 
-FarmSection:NewToggle("Auto Haki", "Ativar Haki automaticamente", function(state)
+PrisonSection:NewToggle("Auto Haki", "Ativar habilidade especial automaticamente", function(state)
     getgenv().Auto_Haki = state
     if state then autoHaki() end
 end)
 
-FarmSection:NewToggle("Auto Instinto", "Ativar Instinto automaticamente", function(state)
+PrisonSection:NewToggle("Auto Instinto", "Ativar Instinto automaticamente", function(state)
     getgenv().Auto_Instinct = state
     if state then autoInstinct() end
 end)
 
-FarmSection:NewToggle("Auto Skills", "Usar habilidades automaticamente", function(state)
+PrisonSection:NewToggle("Auto Skills", "Usar habilidades automaticamente", function(state)
     getgenv().Auto_Skills = state
     if state then autoSkills() end
 end)
 
-FarmSection:NewToggle("Auto Devil Fruit", "Consumir Devil Fruit automaticamente", function(state)
-    getgenv().Auto_Devil_Fruit = state
-    if state then autoDevilFruit() end
-end)
-
-FarmSection:NewToggle("Auto Quests", "Aceitar e completar missões automaticamente", function(state)
+PrisonSection:NewToggle("Auto Quests", "Aceitar e completar missões automaticamente", function(state)
     getgenv().Auto_Quest = state
     if state then autoQuest() end
 end)
 
-FarmSection:NewToggle("Auto Boss Farm", "Farmar Bosses automaticamente", function(state)
+PrisonSection:NewToggle("Auto Boss Farm", "Farmar Chefes automaticamente", function(state)
     getgenv().Auto_Boss_Farm = state
     if state then autoBossFarm() end
 end)
 
-FarmSection:NewToggle("Auto PVP", "Ativar combate automático com jogadores", function(state)
+PrisonSection:NewToggle("Auto PVP", "Ativar combate automático com jogadores", function(state)
     getgenv().Auto_PVP = state
     if state then autoPVP() end
 end)
 
-FarmSection:NewToggle("Auto Chat", "Enviar mensagens automaticamente no chat", function(state)
+PrisonSection:NewToggle("Auto Chat", "Enviar mensagens automaticamente no chat", function(state)
     getgenv().Auto_Chat = state
     if state then autoChat() end
 end)
 
-FarmSection:NewToggle("Auto Pickup Itens", "Pegar itens automaticamente", function(state)
+PrisonSection:NewToggle("Auto Pickup Itens", "Pegar itens automaticamente", function(state)
     getgenv().Auto_Pickup_Items = state
     if state then autoPickupItems() end
-end)
-
-FarmSection:NewToggle("Auto Devil Fruit Click", "Clique automático para pegar Devil Fruit", function(state)
-    getgenv().Auto_Devil_Fruit_Click = state
-    if state then autoDevilFruitClick() end
 end)
