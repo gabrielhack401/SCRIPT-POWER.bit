@@ -1,1 +1,3 @@
-loadstring(game:HttpGet("https://github.com/gabrielhack401/SCRIPT-POWER.bit/blob/main/POWER.Lua"))()
+getgenv().Team = "Marines"
+getgenv().Hide_Menu = false
+loadstring(game:HttpGet("https://raw.githubusercontent.com/gabrielhack401/SCRIPT-POWER.bit/main/POWER.Lua"))()
