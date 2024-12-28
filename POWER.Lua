@@ -2,7 +2,7 @@
 
 -- Biblioteca de GUI
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
-local Window = Library.CreateLib("Blox Fruits Script", "DarkTheme")
+local Window = Library.CreateLib("Blox Fruits Script - Sea 3", "DarkTheme")
 
 -- Seções do Menu
 local FarmTab = Window:NewTab("Farm")
@@ -17,6 +17,9 @@ local SettingsSection = SettingsTab:NewSection("General Settings")
 local TeleportTab = Window:NewTab("Teleport")
 local TeleportSection = TeleportTab:NewSection("Teleport Options")
 
+local NewFeaturesTab = Window:NewTab("New Features")
+local NewFeaturesSection = NewFeaturesTab:NewSection("New Update Features")
+
 -- Configurações Gerais
 getgenv().Auto_Farm = false
 getgenv().Auto_Quest = false
@@ -28,43 +31,97 @@ getgenv().Auto_Click = true
 getgenv().Auto_Ability = false
 getgenv().Auto_Dungeon = false
 getgenv().Auto_Train = false
+getgenv().Auto_Collect_Grifts = false
+getgenv().Auto_Collect_Cards = false
+getgenv().Auto_Get_New_Sword = false
+getgenv().Auto_Get_Dragon_Race = false
+getgenv().Farm_Red_Flames = false
+getgenv().Auto_Get_Weapon_History = false
 
 -- Função de Depuração
 local function debugMessage(message)
     print("[DEBUG] " .. message)
 end
 
--- Lista de Ilhas e Leveis
-local islands = {
-    {name = "Starter Island", minLevel = 1, maxLevel = 50, position = Vector3.new(0, 0, 0)},
-    {name = "Middle Island", minLevel = 51, maxLevel = 120, position = Vector3.new(1000, 0, 1000)},
-    {name = "Snow Island", minLevel = 121, maxLevel = 200, position = Vector3.new(2000, 0, 2000)},
-    {name = "Sky Island", minLevel = 201, maxLevel = 300, position = Vector3.new(3000, 0, 3000)},
-    {name = "Underwater Island", minLevel = 301, maxLevel = 400, position = Vector3.new(4000, 0, 4000)},
-    {name = "Dragon Tail Island", minLevel = 401, maxLevel = 500, position = Vector3.new(5000, 0, 5000)},
-    {name = "Gas Island", minLevel = 501, maxLevel = 600, position = Vector3.new(6000, 0, 6000)},
-    {name = "Final Sea Island", minLevel = 601, maxLevel = 2600, position = Vector3.new(7000, 0, 7000)},
-}
-
--- Função para Teleportar para uma Ilha
-local function teleportToIsland(islandName)
-    for _, island in ipairs(islands) do
-        if island.name == islandName then
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(island.position)
-            debugMessage("Teletransportando para a ilha: " .. islandName)
-            return
+-- Função de Coletar Grifts
+local function collectGrifts()
+    spawn(function()
+        while getgenv().Auto_Collect_Grifts do
+            -- Lógica para coletar todos os Grifts (fazer a verificação de locais de spawn de Grifts)
+            debugMessage("Coletando Grifts...")
+            -- Aqui você adiciona a lógica de como pegar os Grifts no Sea 3
+            wait(2)
         end
-    end
-    debugMessage("Ilha não encontrada: " .. islandName)
+    end)
 end
 
--- Funções de Auto Farm
+-- Função de Coletar Cards
+local function collectCards()
+    spawn(function()
+        while getgenv().Auto_Collect_Cards do
+            -- Lógica para coletar todos os Cards (fazer a verificação de locais de spawn de Cards)
+            debugMessage("Coletando Cards...")
+            -- Aqui você adiciona a lógica de como pegar os Cards no Sea 3
+            wait(2)
+        end
+    end)
+end
+
+-- Função para Obter a História da Nova Arma
+local function getWeaponHistory()
+    spawn(function()
+        while getgenv().Auto_Get_Weapon_History do
+            -- Lógica para obter a história da nova arma
+            debugMessage("Pegando a história da nova arma...")
+            -- Adicionar lógica para obter a história da arma
+            wait(3)
+        end
+    end)
+end
+
+-- Função para Obter a Nova Espada
+local function getNewSword()
+    spawn(function()
+        while getgenv().Auto_Get_New_Sword do
+            -- Lógica para obter a nova espada
+            debugMessage("Pegando a nova espada...")
+            -- Adicionar lógica para pegar a nova espada
+            wait(3)
+        end
+    end)
+end
+
+-- Função para Obter Raça Dragão em Todas as Faixas
+local function getDragonRace()
+    spawn(function()
+        while getgenv().Auto_Get_Dragon_Race do
+            -- Lógica para pegar a raça dragão em todas as faixas
+            debugMessage("Pegando a raça Dragão...")
+            -- Adicionar lógica para pegar a raça Dragão
+            wait(4)
+        end
+    end)
+end
+
+-- Função de Farmar Chamas Vermelhas
+local function farmRedFlames()
+    spawn(function()
+        while getgenv().Farm_Red_Flames do
+            -- Lógica para farmar chamas vermelhas
+            debugMessage("Farmando chamas vermelhas...")
+            -- Aqui você adiciona a lógica de como farmar chamas vermelhas
+            wait(5)
+        end
+    end)
+end
+
+-- Função de Auto Farm
 local function autoFarm()
     spawn(function()
         while getgenv().Auto_Farm do
             local currentIsland = getCurrentIsland()
             debugMessage("Farmando em: " .. currentIsland)
-            -- Lógica de auto farm...
+            -- Lógica de auto farm adaptada para o Sea 3...
             wait(2)
         end
     end)
@@ -74,7 +131,7 @@ end
 local function autoQuest()
     spawn(function()
         while getgenv().Auto_Quest do
-            -- Lógica de auto quest...
+            -- Lógica de auto quest para Sea 3...
             debugMessage("Aceitando missão automaticamente...")
             wait(5)
         end
@@ -85,7 +142,7 @@ end
 local function autoUpgradeStats()
     spawn(function()
         while getgenv().Auto_Upgrade_Stats do
-            -- Lógica de upgrade automático de stats...
+            -- Lógica de upgrade automático de stats para Sea 3...
             debugMessage("Upgradando stats automaticamente...")
             wait(2)
         end
@@ -96,7 +153,7 @@ end
 local function autoBuso()
     spawn(function()
         while getgenv().Auto_Buso do
-            -- Lógica de ativação do Busoshoku Haki...
+            -- Lógica de ativação do Busoshoku Haki no Sea 3...
             debugMessage("Ativando Busoshoku Haki...")
             wait(3)
         end
@@ -107,7 +164,7 @@ end
 local function autoInstinto()
     spawn(function()
         while getgenv().Auto_Instinto do
-            -- Lógica de ativação do Instinto...
+            -- Lógica de ativação do Instinto no Sea 3...
             debugMessage("Ativando Instinto...")
             wait(3)
         end
@@ -129,7 +186,7 @@ end
 local function autoAbility()
     spawn(function()
         while getgenv().Auto_Ability do
-            -- Lógica para usar habilidades automaticamente...
+            -- Lógica para usar habilidades automaticamente no Sea 3...
             debugMessage("Usando habilidade automaticamente...")
             wait(2)
         end
@@ -140,7 +197,7 @@ end
 local function autoDungeon()
     spawn(function()
         while getgenv().Auto_Dungeon do
-            -- Lógica de auto dungeon...
+            -- Lógica de auto dungeon para Sea 3...
             debugMessage("Entrando no Dungeon automaticamente...")
             wait(10)
         end
@@ -151,7 +208,7 @@ end
 local function autoTrain()
     spawn(function()
         while getgenv().Auto_Train do
-            -- Lógica de auto treino...
+            -- Lógica de auto treino para Sea 3...
             debugMessage("Treinando automaticamente...")
             wait(5)
         end
@@ -209,31 +266,57 @@ SettingsSection:NewToggle("Auto Train", "Treinamento automático", function(stat
     if state then autoTrain() end
 end)
 
--- Menu de Teleporte
-TeleportSection:NewButton("Teleporte para Starter Island", "Teleportar para a Ilha Starter", function()
-    teleportToIsland("Starter Island")
+NewFeaturesSection:NewToggle("Coletar Grifts", "Coletar todos os Grifts automaticamente", function(state)
+    getgenv().Auto_Collect_Grifts = state
+    if state then collectGrifts() end
 end)
 
-TeleportSection:NewButton("Teleporte para Snow Island", "Teleportar para a Ilha Snow", function()
-    teleportToIsland("Snow Island")
+NewFeaturesSection:NewToggle("Coletar Cards", "Coletar todos os Cards automaticamente", function(state)
+    getgenv().Auto_Collect_Cards = state
+    if state then collectCards() end
 end)
 
-TeleportSection:NewButton("Teleporte para Sky Island", "Teleportar para a Ilha Sky", function()
-    teleportToIsland("Sky Island")
+NewFeaturesSection:NewToggle("Pegar História da Nova Arma", "Obter a história da nova arma", function(state)
+    getgenv().Auto_Get_Weapon_History = state
+    if state then getWeaponHistory() end
 end)
 
-TeleportSection:NewButton("Teleporte para Underwater Island", "Teleportar para a Ilha Underwater", function()
-    teleportToIsland("Underwater Island")
+NewFeaturesSection:NewToggle("Pegar Nova Espada", "Pegar a nova espada automaticamente", function(state)
+    getgenv().Auto_Get_New_Sword = state
+    if state then getNewSword() end
 end)
 
-TeleportSection:NewButton("Teleporte para Dragon Tail Island", "Teleportar para a Ilha Dragon Tail", function()
-    teleportToIsland("Dragon Tail Island")
+NewFeaturesSection:NewToggle("Pegar Raça Dragão", "Pegar a raça Dragão em todas as faixas", function(state)
+    getgenv().Auto_Get_Dragon_Race = state
+    if state then getDragonRace() end
 end)
 
-TeleportSection:NewButton("Teleporte para Gas Island", "Teleportar para a Ilha Gas", function()
+NewFeaturesSection:NewToggle("Farmar Chamas Vermelhas", "Farmar chamas vermelhas automaticamente", function(state)
+    getgenv().Farm_Red_Flames = state
+    if state then farmRedFlames() end
+end)
+
+-- Menu de Teleporte para Sea 3
+TeleportSection:NewButton("Teleporte para Phoenix Island", "Teleportar para Phoenix Island (Sea 3)", function()
+    teleportToIsland("Sea 3: Phoenix Island")
+end)
+
+TeleportSection:NewButton("Teleporte para Volcano Island", "Teleportar para Volcano Island (Sea 3)", function()
+    teleportToIsland("Sea 3: Volcano Island")
+end)
+
+TeleportSection:NewButton("Teleporte para Ghost Ship Island", "Teleportar para Ghost Ship Island (Sea 3)", function()
+    teleportToIsland("Sea 3: Ghost Ship Island")
+end)
+
+TeleportSection:NewButton("Teleporte para Final Sea Island", "Teleportar para Final Sea Island", function()
+    teleportToIsland("Final Sea Island")
+end)
+
+TeleportSection:NewButton("Teleporte para Gas Island", "Teleportar para Gas Island", function()
     teleportToIsland("Gas Island")
 end)
 
-TeleportSection:NewButton("Teleporte para Final Sea Island", "Teleportar para a Ilha Final Sea", function()
-    teleportToIsland("Final Sea Island")
+TeleportSection:NewButton("Teleporte para Dragon Tail Island", "Teleportar para Dragon Tail Island", function()
+    teleportToIsland("Dragon Tail Island")
 end)
