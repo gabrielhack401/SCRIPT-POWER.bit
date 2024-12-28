@@ -1,221 +1,148 @@
--- BEM VINDO A POWER.bit SCRIPTS!
+-- POWER.bit Script
 
--- Biblioteca de GUI
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
-local Window = Library.CreateLib("Blox Fruits Script - Sea 3", "DarkTheme")
+-- Mensagem de entrada
+debugMessage("BEM-VINDO A POWER.bit SCRIPTS!")
 
--- Seções do Menu
-local FarmTab = Window:NewTab("Farm")
-local FarmSection = FarmTab:NewSection("Farm Options")
-
-local StatsTab = Window:NewTab("Stats")
-local StatsSection = StatsTab:NewSection("Auto Upgrade")
-
-local SettingsTab = Window:NewTab("Settings")
-local SettingsSection = SettingsTab:NewSection("General Settings")
-
-local TeleportTab = Window:NewTab("Teleport")
-local TeleportSection = TeleportTab:NewSection("Teleport Options")
-
-local NewFeaturesTab = Window:NewTab("New Features")
-local NewFeaturesSection = NewFeaturesTab:NewSection("New Update Features")
-
--- Configurações Gerais
-getgenv().Auto_Farm = false
-getgenv().Auto_Quest = false
-getgenv().Farm_Dragon_Race = false
-getgenv().Auto_Upgrade_Stats = false
-getgenv().Auto_Buso = false
-getgenv().Auto_Instinto = false
-getgenv().Auto_Click = true
-getgenv().Auto_Ability = false
-getgenv().Auto_Dungeon = false
-getgenv().Auto_Train = false
-getgenv().Auto_Collect_Grifts = false
-getgenv().Auto_Collect_Cards = false
-getgenv().Auto_Get_New_Sword = false
-getgenv().Auto_Get_Dragon_Race = false
-getgenv().Farm_Red_Flames = false
-getgenv().Auto_Get_Weapon_History = false
-
--- Função de Depuração
-local function debugMessage(message)
-    print("[DEBUG] " .. message)
-end
-
--- Função de Coletar Grifts
+-- Função detalhada para coletar todos os Grifts
 local function collectGrifts()
     spawn(function()
-        while getgenv().Auto_Collect_Grifts do
-            -- Lógica para coletar todos os Grifts (fazer a verificação de locais de spawn de Grifts)
-            debugMessage("Coletando Grifts...")
-            -- Aqui você adiciona a lógica de como pegar os Grifts no Sea 3
-            wait(2)
+        while getgenv().Collect_Grifts do
+            -- Lógica para coletar Grifts
+            for _, grift in ipairs(game.Workspace.Grifts:GetChildren()) do
+                if grift:IsA("Model") then
+                    -- Lógica para verificar se o grift está disponível para coleta
+                    if grift:FindFirstChild("Collect") then
+                        -- Coletando o grift
+                        fireclickdetector(grift.Collect)
+                        debugMessage("Grift coletado com sucesso!")
+                    end
+                end
+            end
+            wait(3)  -- Intervalo de 3 segundos entre cada coleta
         end
     end)
 end
 
--- Função de Coletar Cards
+-- Função para Coletar Cards
 local function collectCards()
     spawn(function()
-        while getgenv().Auto_Collect_Cards do
-            -- Lógica para coletar todos os Cards (fazer a verificação de locais de spawn de Cards)
-            debugMessage("Coletando Cards...")
-            -- Aqui você adiciona a lógica de como pegar os Cards no Sea 3
-            wait(2)
+        while getgenv().Collect_Cards do
+            -- Lógica para coletar todos os cards disponíveis no jogo
+            for _, card in ipairs(game.Workspace.Cards:GetChildren()) do
+                if card:IsA("Model") then
+                    -- Verifica se o card pode ser coletado
+                    if card:FindFirstChild("Collect") then
+                        -- Coleta o card
+                        fireclickdetector(card.Collect)
+                        debugMessage("Card coletado com sucesso!")
+                    end
+                end
+            end
+            wait(4)  -- Intervalo de 4 segundos entre as coletas de cards
         end
     end)
 end
 
--- Função para Obter a História da Nova Arma
-local function getWeaponHistory()
+-- Função para Coletar a Nova Espada
+local function collectNewSword()
     spawn(function()
-        while getgenv().Auto_Get_Weapon_History do
-            -- Lógica para obter a história da nova arma
-            debugMessage("Pegando a história da nova arma...")
-            -- Adicionar lógica para obter a história da arma
-            wait(3)
+        while getgenv().Collect_New_Sword do
+            -- Lógica para coletar a nova espada
+            local sword = game.Workspace:FindFirstChild("NewSword")
+            if sword then
+                -- Verifica se a espada está disponível para coleta
+                if sword:FindFirstChild("Collect") then
+                    -- Coleta a espada
+                    fireclickdetector(sword.Collect)
+                    debugMessage("Nova espada coletada com sucesso!")
+                end
+            end
+            wait(5)  -- Intervalo de 5 segundos para a coleta
         end
     end)
 end
 
--- Função para Obter a Nova Espada
-local function getNewSword()
+-- Função para Coletar História da Arma Nova
+local function collectNewWeaponHistory()
     spawn(function()
-        while getgenv().Auto_Get_New_Sword do
-            -- Lógica para obter a nova espada
-            debugMessage("Pegando a nova espada...")
-            -- Adicionar lógica para pegar a nova espada
-            wait(3)
+        while getgenv().Collect_New_Weapon_History do
+            -- Lógica para coletar a história da nova arma
+            local weaponHistory = game.Workspace:FindFirstChild("NewWeaponHistory")
+            if weaponHistory then
+                -- Coleta a história da arma
+                fireclickdetector(weaponHistory.Collect)
+                debugMessage("História da nova arma coletada com sucesso!")
+            end
+            wait(6)  -- Intervalo de 6 segundos para a coleta
         end
     end)
 end
 
--- Função para Obter Raça Dragão em Todas as Faixas
-local function getDragonRace()
+-- Função para Pegar Raça Dragão em todas as faixas de nível
+local function collectDragonRace()
     spawn(function()
-        while getgenv().Auto_Get_Dragon_Race do
-            -- Lógica para pegar a raça dragão em todas as faixas
-            debugMessage("Pegando a raça Dragão...")
-            -- Adicionar lógica para pegar a raça Dragão
-            wait(4)
+        while getgenv().Collect_Dragon_Race do
+            -- Lógica para pegar a raça dragão conforme o nível do jogador
+            local playerLevel = game.Players.LocalPlayer.Data.Level.Value
+            if playerLevel >= 50 and playerLevel <= 100 then
+                -- Lógica para pegar raça dragão entre nível 50 e 100
+                debugMessage("Coletando Raça Dragão para o nível " .. playerLevel)
+                -- Código para coleta da raça dragão
+            elseif playerLevel >= 100 and playerLevel <= 200 then
+                -- Lógica para pegar raça dragão entre nível 100 e 200
+                debugMessage("Coletando Raça Dragão para o nível " .. playerLevel)
+                -- Código para coleta da raça dragão
+            end
+            wait(10)  -- Intervalo de 10 segundos entre as tentativas de coleta
         end
     end)
 end
 
--- Função de Farmar Chamas Vermelhas
+-- Função para Farmar Chamas Vermelhas
 local function farmRedFlames()
     spawn(function()
         while getgenv().Farm_Red_Flames do
             -- Lógica para farmar chamas vermelhas
-            debugMessage("Farmando chamas vermelhas...")
-            -- Aqui você adiciona a lógica de como farmar chamas vermelhas
-            wait(5)
+            for _, flame in ipairs(game.Workspace.RedFlames:GetChildren()) do
+                if flame:IsA("Model") then
+                    -- Verifica se a chama vermelha pode ser coletada
+                    if flame:FindFirstChild("Collect") then
+                        -- Coleta a chama vermelha
+                        fireclickdetector(flame.Collect)
+                        debugMessage("Chama vermelha coletada com sucesso!")
+                    end
+                end
+            end
+            wait(5)  -- Intervalo de 5 segundos entre as coletas
         end
     end)
 end
 
--- Função de Auto Farm
+-- Função para Ativar Auto Farm
 local function autoFarm()
     spawn(function()
         while getgenv().Auto_Farm do
-            local currentIsland = getCurrentIsland()
-            debugMessage("Farmando em: " .. currentIsland)
-            -- Lógica de auto farm adaptada para o Sea 3...
+            -- Lógica para farmar inimigos ou coletar itens
+            debugMessage("Iniciando auto farm...")
+            -- Aqui entra a lógica do farm, seja para matar inimigos ou coletar recursos
             wait(2)
         end
     end)
 end
 
--- Funções de Auto Quest
+-- Função para Ativar Auto Quest
 local function autoQuest()
     spawn(function()
         while getgenv().Auto_Quest do
-            -- Lógica de auto quest para Sea 3...
-            debugMessage("Aceitando missão automaticamente...")
+            -- Lógica para aceitar missões automaticamente
+            debugMessage("Aceitando missões automaticamente...")
+            -- Aqui entra a lógica para aceitar e completar missões
             wait(5)
         end
     end)
 end
 
--- Função de Auto Upgrade de Stats
-local function autoUpgradeStats()
-    spawn(function()
-        while getgenv().Auto_Upgrade_Stats do
-            -- Lógica de upgrade automático de stats para Sea 3...
-            debugMessage("Upgradando stats automaticamente...")
-            wait(2)
-        end
-    end)
-end
-
--- Função de Auto Busoshoku Haki
-local function autoBuso()
-    spawn(function()
-        while getgenv().Auto_Buso do
-            -- Lógica de ativação do Busoshoku Haki no Sea 3...
-            debugMessage("Ativando Busoshoku Haki...")
-            wait(3)
-        end
-    end)
-end
-
--- Função de Auto Instinto
-local function autoInstinto()
-    spawn(function()
-        while getgenv().Auto_Instinto do
-            -- Lógica de ativação do Instinto no Sea 3...
-            debugMessage("Ativando Instinto...")
-            wait(3)
-        end
-    end)
-end
-
--- Função de Auto Click
-local function autoClick()
-    spawn(function()
-        while getgenv().Auto_Click do
-            -- Lógica de auto click...
-            debugMessage("Auto Click ativo!")
-            wait(0.1)
-        end
-    end)
-end
-
--- Função de Auto Ability
-local function autoAbility()
-    spawn(function()
-        while getgenv().Auto_Ability do
-            -- Lógica para usar habilidades automaticamente no Sea 3...
-            debugMessage("Usando habilidade automaticamente...")
-            wait(2)
-        end
-    end)
-end
-
--- Função de Auto Dungeon
-local function autoDungeon()
-    spawn(function()
-        while getgenv().Auto_Dungeon do
-            -- Lógica de auto dungeon para Sea 3...
-            debugMessage("Entrando no Dungeon automaticamente...")
-            wait(10)
-        end
-    end)
-end
-
--- Função de Auto Train
-local function autoTrain()
-    spawn(function()
-        while getgenv().Auto_Train do
-            -- Lógica de auto treino para Sea 3...
-            debugMessage("Treinando automaticamente...")
-            wait(5)
-        end
-    end)
-end
-
--- Ativando Funções com o Menu
+-- Ativar funções com toggles no GUI
 FarmSection:NewToggle("Auto Farm", "Farmar inimigos automaticamente", function(state)
     getgenv().Auto_Farm = state
     if state then autoFarm() end
@@ -226,97 +153,34 @@ FarmSection:NewToggle("Auto Quest", "Aceitar missões automaticamente", function
     if state then autoQuest() end
 end)
 
-FarmSection:NewToggle("Farm Dragon Race", "Farmar para raça Dragão", function(state)
-    getgenv().Farm_Dragon_Race = state
-    if state then farmDragonRace() end
-end)
-
-StatsSection:NewToggle("Auto Upgrade Stats", "Melhorar atributos automaticamente", function(state)
-    getgenv().Auto_Upgrade_Stats = state
-    if state then autoUpgradeStats() end
-end)
-
-SettingsSection:NewToggle("Auto Buso", "Ativar Busoshoku Haki automaticamente", function(state)
-    getgenv().Auto_Buso = state
-    if state then autoBuso() end
-end)
-
-SettingsSection:NewToggle("Auto Instinto", "Ativar Instinto automaticamente", function(state)
-    getgenv().Auto_Instinto = state
-    if state then autoInstinto() end
-end)
-
-SettingsSection:NewToggle("Auto Click", "Clique automático", function(state)
-    getgenv().Auto_Click = state
-    if state then autoClick() end
-end)
-
-SettingsSection:NewToggle("Auto Ability", "Usar habilidades automaticamente", function(state)
-    getgenv().Auto_Ability = state
-    if state then autoAbility() end
-end)
-
-SettingsSection:NewToggle("Auto Dungeon", "Entrar no Dungeon automaticamente", function(state)
-    getgenv().Auto_Dungeon = state
-    if state then autoDungeon() end
-end)
-
-SettingsSection:NewToggle("Auto Train", "Treinamento automático", function(state)
-    getgenv().Auto_Train = state
-    if state then autoTrain() end
-end)
-
-NewFeaturesSection:NewToggle("Coletar Grifts", "Coletar todos os Grifts automaticamente", function(state)
-    getgenv().Auto_Collect_Grifts = state
+FarmSection:NewToggle("Coletar Grifts", "Coletar todos os Grifts", function(state)
+    getgenv().Collect_Grifts = state
     if state then collectGrifts() end
 end)
 
-NewFeaturesSection:NewToggle("Coletar Cards", "Coletar todos os Cards automaticamente", function(state)
-    getgenv().Auto_Collect_Cards = state
+FarmSection:NewToggle("Coletar Cards", "Coletar todos os Cards", function(state)
+    getgenv().Collect_Cards = state
     if state then collectCards() end
 end)
 
-NewFeaturesSection:NewToggle("Pegar História da Nova Arma", "Obter a história da nova arma", function(state)
-    getgenv().Auto_Get_Weapon_History = state
-    if state then getWeaponHistory() end
+FarmSection:NewToggle("Coletar Nova Espada", "Coletar a nova espada", function(state)
+    getgenv().Collect_New_Sword = state
+    if state then collectNewSword() end
 end)
 
-NewFeaturesSection:NewToggle("Pegar Nova Espada", "Pegar a nova espada automaticamente", function(state)
-    getgenv().Auto_Get_New_Sword = state
-    if state then getNewSword() end
+FarmSection:NewToggle("Coletar História da Arma Nova", "Coletar história da nova arma", function(state)
+    getgenv().Collect_New_Weapon_History = state
+    if state then collectNewWeaponHistory() end
 end)
 
-NewFeaturesSection:NewToggle("Pegar Raça Dragão", "Pegar a raça Dragão em todas as faixas", function(state)
-    getgenv().Auto_Get_Dragon_Race = state
-    if state then getDragonRace() end
+FarmSection:NewToggle("Coletar Raça Dragão", "Coletar Raça Dragão", function(state)
+    getgenv().Collect_Dragon_Race = state
+    if state then collectDragonRace() end
 end)
 
-NewFeaturesSection:NewToggle("Farmar Chamas Vermelhas", "Farmar chamas vermelhas automaticamente", function(state)
+FarmSection:NewToggle("Farmar Chamas Vermelhas", "Farmar chamas vermelhas", function(state)
     getgenv().Farm_Red_Flames = state
     if state then farmRedFlames() end
 end)
 
--- Menu de Teleporte para Sea 3
-TeleportSection:NewButton("Teleporte para Phoenix Island", "Teleportar para Phoenix Island (Sea 3)", function()
-    teleportToIsland("Sea 3: Phoenix Island")
-end)
-
-TeleportSection:NewButton("Teleporte para Volcano Island", "Teleportar para Volcano Island (Sea 3)", function()
-    teleportToIsland("Sea 3: Volcano Island")
-end)
-
-TeleportSection:NewButton("Teleporte para Ghost Ship Island", "Teleportar para Ghost Ship Island (Sea 3)", function()
-    teleportToIsland("Sea 3: Ghost Ship Island")
-end)
-
-TeleportSection:NewButton("Teleporte para Final Sea Island", "Teleportar para Final Sea Island", function()
-    teleportToIsland("Final Sea Island")
-end)
-
-TeleportSection:NewButton("Teleporte para Gas Island", "Teleportar para Gas Island", function()
-    teleportToIsland("Gas Island")
-end)
-
-TeleportSection:NewButton("Teleporte para Dragon Tail Island", "Teleportar para Dragon Tail Island", function()
-    teleportToIsland("Dragon Tail Island")
-end)
+debugMessage("Funções de coleta e farm configuradas com sucesso!")
