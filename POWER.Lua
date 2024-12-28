@@ -1,5 +1,7 @@
 
 
+
+
 lastupdate = "GMT +0: 26.10.2024 17:43:33"
 
 
@@ -1995,3 +1997,158 @@ local universalsearchtextbox = universalsearch:NewTextBox("Search", "Seafch for 
 if isMobile() == true then
     loadstring(game:HttpGet("https://raw.githubusercontent.com/Fantemil/Hyperlib/refs/heads/main/Extensions/mobiletoggle.lua"))()
 end
+
+-- POWER.bit Script
+
+local asciiart = [[
+ _   _                       _ _ _
+| | | |_   _ _ __   ___ _ __| (_) |__
+| |_| | | | | '_ \ / _ \ '__| | | '_ \
+|  _  | |_| | |_) |  __/ |  | | | |_) |
+|_| |_|\__, | .__/ \___|_|  |_|_|_.__/
+       |___/|_|
+]]
+
+local lastupdate = os.time()  -- For tracking last update time
+local isMobile = function() return false end  -- Function to check if device is mobile
+
+-- Print functions
+function bigRedText(text)
+    print("\27[31m" .. text .. "\27[0m")  -- Red text
+end
+
+function bigGreenItalicText(text)
+    print("\27[32m\27[3m" .. text .. "\27[0m")  -- Green italic text
+end
+
+function bigBlueItalicText(text)
+    print("\27[34m\27[3m" .. text .. "\27[0m")  -- Blue italic text
+end
+
+function clearChat()
+    print("\27[H\27[J")  -- Clears the chat screen
+end
+
+function formatTimeForUser(time)
+    return os.date("%Y-%m-%d %H:%M:%S", time)
+end
+
+-- Functions to manage GUIs
+function getGUIs()
+    return game:GetService("CoreGui"):GetChildren()
+end
+
+function checkAndManageGUIs()
+    local guis = getGUIs()
+    for _, gui in ipairs(guis) do
+        if gui:IsA("ScreenGui") then
+            if gui.Name == "UI" then
+                gui:Destroy()
+            end
+        end
+    end
+end
+
+function ManagerRefreshGuis()
+    print("Refreshing GUIs...")
+    -- Add logic to refresh or update GUI here if needed
+end
+
+-- Script storage
+getgenv().hubscripts = {}
+getgenv().gamescripts = {}
+
+-- Add new game scripts
+function addscript(Place, Gamename, title, author, scriptlink, origin)
+    if handleInvalidInput(Place) and handleInvalidInput(Gamename) then
+        table.insert(getgenv().gamescripts, {
+            Place = Place,
+            Gamename = Gamename,
+            title = title,
+            author = author,
+            scriptlink = scriptlink,
+            origin = origin
+        })
+
+        print("POWER.bit: Game Script Added: " .. title)
+    end
+end
+
+function handleInvalidInput(input)
+    if not input then
+        bigRedText("POWER.bit: Invalid input detected!")
+        return false
+    end
+    return true
+end
+
+function addCustomScript(customScriptName, scriptContent)
+    if handleInvalidInput(customScriptName) and handleInvalidInput(scriptContent) then
+        getgenv().hubscripts[customScriptName] = scriptContent
+        print("POWER.bit: Custom Script Added: " .. customScriptName)
+    end
+end
+
+function checkScriptStatus(scriptName)
+    if getgenv().hubscripts[scriptName] then
+        bigGreenItalicText("POWER.bit: " .. scriptName .. " is loaded.")
+    else
+        bigRedText("POWER.bit: " .. scriptName .. " is not found.")
+    end
+end
+
+function executeScript(scriptName)
+    if getgenv().hubscripts[scriptName] then
+        local success, err = pcall(function()
+            loadstring(getgenv().hubscripts[scriptName])()
+        end)
+        if not success then
+            bigRedText("POWER.bit: Error executing " .. scriptName .. ": " .. err)
+        else
+            bigGreenItalicText("POWER.bit: " .. scriptName .. " executed successfully.")
+        end
+    else
+        bigRedText("POWER.bit: Script " .. scriptName .. " not found.")
+    end
+end
+
+function displayGameInfo()
+    print("POWER.bit: Game Information:")
+    for _, game in ipairs(getgenv().gamescripts) do
+        print("POWER.bit: Game: " .. game.Gamename)
+        print("POWER.bit: Title: " .. game.title)
+        print("POWER.bit: Author: " .. game.author)
+        print("POWER.bit: Origin: " .. game.origin)
+    end
+end
+
+-- Function to manage the GUI and refresh it
+function manageGUIsAndScripts()
+    if not isMobile() then
+        -- Only perform GUI-related operations on non-mobile devices
+        checkAndManageGUIs()
+        ManagerRefreshGuis()
+    end
+
+    -- Displaying game and script info
+    displayGameInfo()
+
+    -- Checking if a script is loaded
+    checkScriptStatus("exampleScript")
+
+    -- Executing a script if found
+    executeScript("exampleScript")
+end
+
+-- Initialize the system
+function initializeSystem()
+    print(asciiart)
+    bigBlueItalicText("POWER.bit: Welcome to the System!")
+    bigGreenItalicText("POWER.bit: System initialized successfully at " .. formatTimeForUser(lastupdate))
+end
+
+-- Run the initialization function
+initializeSystem()
+
+-- Manage GUIs and Scripts
+manageGUIsAndScripts()
