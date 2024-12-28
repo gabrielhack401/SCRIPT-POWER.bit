@@ -1,37 +1,12 @@
--- Configuração de link para o script no GitHub
-local scriptUrl = "https://raw.githubusercontent.com/gabrielhack401/SCRIPT-POWER.bit/main/POWER.Lua"
-
--- Função para carregar o script do GitHub
-local function loadScript()
-    -- Usando HttpGet para buscar o conteúdo do script
-    local scriptContent = game:HttpGet(scriptUrl)
-    
-    -- Executando o script
-    loadstring(scriptContent)()
-end
-
--- Executando a função de carregar o script
-loadScript()
-
--- Mensagem de boas-vindas
-game:GetService("StarterGui"):SetCore("SendNotification", {
-    Title = "POWER.bit SCRIPTS",  -- Título alterado
-    Text = "BEM VINDO A POWER.bit SCRIPTS!",
-    Icon = "rbxassetid://123456789",  -- Insira o ID da imagem do ícone, se desejado
-    Duration = 5  -- Duração da notificação em segundos
-})
-
--- Criando o menu do script com nome "POWER.bit"
-local menu = game:GetService("CoreGui"):WaitForChild("RobloxGui"):WaitForChild("ScreenGui"):WaitForChild("Frame")
-menu.Name = "POWER.bit"
+-- BEM VINDO A POWER.bit SCRIPTS!
 
 -- Biblioteca de GUI
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
-local Window = Library.CreateLib("POWER.bit SCRIPTS", "DarkTheme")  -- Título alterado
+local Window = Library.CreateLib("Blox Fruits Script", "DarkTheme")
 
 -- Seções do Menu
-local PrisonTab = Window:NewTab("Prison")
-local PrisonSection = PrisonTab:NewSection("Prison Escape Options")
+local FarmTab = Window:NewTab("Farm")
+local FarmSection = FarmTab:NewSection("Farm Options")
 
 local StatsTab = Window:NewTab("Stats")
 local StatsSection = StatsTab:NewSection("Auto Upgrade")
@@ -42,193 +17,223 @@ local SettingsSection = SettingsTab:NewSection("General Settings")
 local TeleportTab = Window:NewTab("Teleport")
 local TeleportSection = TeleportTab:NewSection("Teleport Options")
 
-local EventsTab = Window:NewTab("Events")
-local EventsSection = EventsTab:NewSection("Prison Events")
+-- Configurações Gerais
+getgenv().Auto_Farm = false
+getgenv().Auto_Quest = false
+getgenv().Farm_Dragon_Race = false
+getgenv().Auto_Upgrade_Stats = false
+getgenv().Auto_Buso = false
+getgenv().Auto_Instinto = false
+getgenv().Auto_Click = true
+getgenv().Auto_Ability = false
+getgenv().Auto_Dungeon = false
+getgenv().Auto_Train = false
 
--- Configurações de Tema
-getgenv().SettingTheme = {
-    Tab = {
-        Left_Color = Color3.fromRGB(203, 156, 255),
-        Right_Color = Color3.fromRGB(140, 166, 252)
-    },
-    Button = {
-        Left_Color = Color3.fromRGB(203, 156, 255),
-        Right_Color = Color3.fromRGB(140, 166, 252)
-    },
-}
-
--- Funções e opções do menu
--- Exemplo de função de Auto Escape (Escapar da prisão)
-getgenv().Auto_Escape = false
-local function autoEscape()
-    spawn(function()
-        while getgenv().Auto_Escape do
-            print("Escapando da prisão...")
-            wait(2)
-        end
-    end)
+-- Função de Depuração
+local function debugMessage(message)
+    print("[DEBUG] " .. message)
 end
 
-PrisonSection:NewToggle("Auto Escape", "Escapar automaticamente da prisão", function(state)
-    getgenv().Auto_Escape = state
-    if state then autoEscape() end
-end)
-
--- Funções de Teleporte
-local locations = {
-    {name = "Prison Entrance", position = Vector3.new(0, 0, 0)},
-    {name = "Criminal Base", position = Vector3.new(2000, 0, 2000)},
+-- Lista de Ilhas e Leveis
+local islands = {
+    {name = "Starter Island", minLevel = 1, maxLevel = 50, position = Vector3.new(0, 0, 0)},
+    {name = "Middle Island", minLevel = 51, maxLevel = 120, position = Vector3.new(1000, 0, 1000)},
+    {name = "Snow Island", minLevel = 121, maxLevel = 200, position = Vector3.new(2000, 0, 2000)},
+    {name = "Sky Island", minLevel = 201, maxLevel = 300, position = Vector3.new(3000, 0, 3000)},
+    {name = "Underwater Island", minLevel = 301, maxLevel = 400, position = Vector3.new(4000, 0, 4000)},
+    {name = "Dragon Tail Island", minLevel = 401, maxLevel = 500, position = Vector3.new(5000, 0, 5000)},
+    {name = "Gas Island", minLevel = 501, maxLevel = 600, position = Vector3.new(6000, 0, 6000)},
+    {name = "Final Sea Island", minLevel = 601, maxLevel = 2600, position = Vector3.new(7000, 0, 7000)},
 }
 
-local function teleportToLocation(locationName)
-    for _, location in ipairs(locations) do
-        if location.name == locationName then
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(location.position)
-            print("Teletransportando para:", locationName)
+-- Função para Teleportar para uma Ilha
+local function teleportToIsland(islandName)
+    for _, island in ipairs(islands) do
+        if island.name == islandName then
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(island.position)
+            debugMessage("Teletransportando para a ilha: " .. islandName)
             return
         end
     end
-    print("Localização não encontrada:", locationName)
+    debugMessage("Ilha não encontrada: " .. islandName)
 end
 
-TeleportSection:NewButton("Teleporte para Prison Entrance", "Teleportar para a entrada da prisão", function()
-    teleportToLocation("Prison Entrance")
-end)
-
-TeleportSection:NewButton("Teleporte para Criminal Base", "Teleportar para a base dos criminosos", function()
-    teleportToLocation("Criminal Base")
-end)
-
--- Funções de Auto Haki (ou habilidade especial no Jailbreak)
-local function autoHaki()
+-- Funções de Auto Farm
+local function autoFarm()
     spawn(function()
-        while getgenv().Auto_Haki do
-            -- Código para ativar habilidade especial automaticamente
-            print("Habilidade especial ativada!")
+        while getgenv().Auto_Farm do
+            local currentIsland = getCurrentIsland()
+            debugMessage("Farmando em: " .. currentIsland)
+            -- Lógica de auto farm...
             wait(2)
         end
     end)
 end
 
--- Função de Auto Instinto
-local function autoInstinct()
-    spawn(function()
-        while getgenv().Auto_Instinct do
-            -- Código para ativar Instinto automaticamente
-            print("Instinto ativado automaticamente!")
-            wait(2)
-        end
-    end)
-end
-
--- Função de Auto Skills (habilidades)
-local function autoSkills()
-    spawn(function()
-        while getgenv().Auto_Skills do
-            -- Código para usar habilidades automaticamente
-            print("Usando habilidades automaticamente...")
-            wait(2)
-        end
-    end)
-end
-
--- Função de Auto Quests (Missões)
+-- Funções de Auto Quest
 local function autoQuest()
     spawn(function()
         while getgenv().Auto_Quest do
-            -- Código para aceitar e completar missões automaticamente
-            print("Aceitando e completando missões automaticamente...")
+            -- Lógica de auto quest...
+            debugMessage("Aceitando missão automaticamente...")
             wait(5)
         end
     end)
 end
 
--- Função de Auto Boss Farm (Farming de Chefes)
-local function autoBossFarm()
+-- Função de Auto Upgrade de Stats
+local function autoUpgradeStats()
     spawn(function()
-        while getgenv().Auto_Boss_Farm do
-            -- Código para farmar chefes automaticamente
-            print("Farmando Chefes automaticamente...")
-            wait(5)
+        while getgenv().Auto_Upgrade_Stats do
+            -- Lógica de upgrade automático de stats...
+            debugMessage("Upgradando stats automaticamente...")
+            wait(2)
         end
     end)
 end
 
--- Função de Auto PVP (Combate contra jogadores)
-local function autoPVP()
+-- Função de Auto Busoshoku Haki
+local function autoBuso()
     spawn(function()
-        while getgenv().Auto_PVP do
-            -- Código para ativar o combate automático contra jogadores
-            print("Ativando Auto PVP!")
+        while getgenv().Auto_Buso do
+            -- Lógica de ativação do Busoshoku Haki...
+            debugMessage("Ativando Busoshoku Haki...")
             wait(3)
         end
     end)
 end
 
--- Função de Auto Chat (Envio de mensagens)
-local function autoChat()
+-- Função de Auto Instinto
+local function autoInstinto()
     spawn(function()
-        while getgenv().Auto_Chat do
-            -- Código para enviar mensagens automáticas no chat
-            print("Enviando mensagem no chat automaticamente...")
-            wait(10)  -- Intervalo para enviar mensagens
+        while getgenv().Auto_Instinto do
+            -- Lógica de ativação do Instinto...
+            debugMessage("Ativando Instinto...")
+            wait(3)
         end
     end)
 end
 
--- Função de Auto Pickup Itens (Coletando itens)
-local function autoPickupItems()
+-- Função de Auto Click
+local function autoClick()
     spawn(function()
-        while getgenv().Auto_Pickup_Items do
-            -- Código para pegar itens automaticamente
-            print("Pegando itens automaticamente...")
-            wait(1)
+        while getgenv().Auto_Click do
+            -- Lógica de auto click...
+            debugMessage("Auto Click ativo!")
+            wait(0.1)
         end
     end)
 end
 
--- Menu de Escape
-PrisonSection:NewToggle("Auto Escape", "Escapar automaticamente da prisão", function(state)
-    getgenv().Auto_Escape = state
-    if state then autoEscape() end
+-- Função de Auto Ability
+local function autoAbility()
+    spawn(function()
+        while getgenv().Auto_Ability do
+            -- Lógica para usar habilidades automaticamente...
+            debugMessage("Usando habilidade automaticamente...")
+            wait(2)
+        end
+    end)
+end
+
+-- Função de Auto Dungeon
+local function autoDungeon()
+    spawn(function()
+        while getgenv().Auto_Dungeon do
+            -- Lógica de auto dungeon...
+            debugMessage("Entrando no Dungeon automaticamente...")
+            wait(10)
+        end
+    end)
+end
+
+-- Função de Auto Train
+local function autoTrain()
+    spawn(function()
+        while getgenv().Auto_Train do
+            -- Lógica de auto treino...
+            debugMessage("Treinando automaticamente...")
+            wait(5)
+        end
+    end)
+end
+
+-- Ativando Funções com o Menu
+FarmSection:NewToggle("Auto Farm", "Farmar inimigos automaticamente", function(state)
+    getgenv().Auto_Farm = state
+    if state then autoFarm() end
 end)
 
-PrisonSection:NewToggle("Auto Haki", "Ativar habilidade especial automaticamente", function(state)
-    getgenv().Auto_Haki = state
-    if state then autoHaki() end
-end)
-
-PrisonSection:NewToggle("Auto Instinto", "Ativar Instinto automaticamente", function(state)
-    getgenv().Auto_Instinct = state
-    if state then autoInstinct() end
-end)
-
-PrisonSection:NewToggle("Auto Skills", "Usar habilidades automaticamente", function(state)
-    getgenv().Auto_Skills = state
-    if state then autoSkills() end
-end)
-
-PrisonSection:NewToggle("Auto Quests", "Aceitar e completar missões automaticamente", function(state)
+FarmSection:NewToggle("Auto Quest", "Aceitar missões automaticamente", function(state)
     getgenv().Auto_Quest = state
     if state then autoQuest() end
 end)
 
-PrisonSection:NewToggle("Auto Boss Farm", "Farmar Chefes automaticamente", function(state)
-    getgenv().Auto_Boss_Farm = state
-    if state then autoBossFarm() end
+FarmSection:NewToggle("Farm Dragon Race", "Farmar para raça Dragão", function(state)
+    getgenv().Farm_Dragon_Race = state
+    if state then farmDragonRace() end
 end)
 
-PrisonSection:NewToggle("Auto PVP", "Ativar combate automático com jogadores", function(state)
-    getgenv().Auto_PVP = state
-    if state then autoPVP() end
+StatsSection:NewToggle("Auto Upgrade Stats", "Melhorar atributos automaticamente", function(state)
+    getgenv().Auto_Upgrade_Stats = state
+    if state then autoUpgradeStats() end
 end)
 
-PrisonSection:NewToggle("Auto Chat", "Enviar mensagens automaticamente no chat", function(state)
-    getgenv().Auto_Chat = state
-    if state then autoChat() end
+SettingsSection:NewToggle("Auto Buso", "Ativar Busoshoku Haki automaticamente", function(state)
+    getgenv().Auto_Buso = state
+    if state then autoBuso() end
 end)
 
-PrisonSection:NewToggle("Auto Pickup Itens", "Pegar itens automaticamente", function(state)
-    getgenv().Auto_Pickup_Items = state
-    if state then autoPickupItems() end
+SettingsSection:NewToggle("Auto Instinto", "Ativar Instinto automaticamente", function(state)
+    getgenv().Auto_Instinto = state
+    if state then autoInstinto() end
+end)
+
+SettingsSection:NewToggle("Auto Click", "Clique automático", function(state)
+    getgenv().Auto_Click = state
+    if state then autoClick() end
+end)
+
+SettingsSection:NewToggle("Auto Ability", "Usar habilidades automaticamente", function(state)
+    getgenv().Auto_Ability = state
+    if state then autoAbility() end
+end)
+
+SettingsSection:NewToggle("Auto Dungeon", "Entrar no Dungeon automaticamente", function(state)
+    getgenv().Auto_Dungeon = state
+    if state then autoDungeon() end
+end)
+
+SettingsSection:NewToggle("Auto Train", "Treinamento automático", function(state)
+    getgenv().Auto_Train = state
+    if state then autoTrain() end
+end)
+
+-- Menu de Teleporte
+TeleportSection:NewButton("Teleporte para Starter Island", "Teleportar para a Ilha Starter", function()
+    teleportToIsland("Starter Island")
+end)
+
+TeleportSection:NewButton("Teleporte para Snow Island", "Teleportar para a Ilha Snow", function()
+    teleportToIsland("Snow Island")
+end)
+
+TeleportSection:NewButton("Teleporte para Sky Island", "Teleportar para a Ilha Sky", function()
+    teleportToIsland("Sky Island")
+end)
+
+TeleportSection:NewButton("Teleporte para Underwater Island", "Teleportar para a Ilha Underwater", function()
+    teleportToIsland("Underwater Island")
+end)
+
+TeleportSection:NewButton("Teleporte para Dragon Tail Island", "Teleportar para a Ilha Dragon Tail", function()
+    teleportToIsland("Dragon Tail Island")
+end)
+
+TeleportSection:NewButton("Teleporte para Gas Island", "Teleportar para a Ilha Gas", function()
+    teleportToIsland("Gas Island")
+end)
+
+TeleportSection:NewButton("Teleporte para Final Sea Island", "Teleportar para a Ilha Final Sea", function()
+    teleportToIsland("Final Sea Island")
 end)
