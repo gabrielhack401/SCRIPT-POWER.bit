@@ -1,186 +1,133 @@
--- POWER.bit Script
-
--- Mensagem de entrada
-debugMessage("BEM-VINDO A POWER.bit SCRIPTS!")
-
--- Função detalhada para coletar todos os Grifts
-local function collectGrifts()
-    spawn(function()
-        while getgenv().Collect_Grifts do
-            -- Lógica para coletar Grifts
-            for _, grift in ipairs(game.Workspace.Grifts:GetChildren()) do
-                if grift:IsA("Model") then
-                    -- Lógica para verificar se o grift está disponível para coleta
-                    if grift:FindFirstChild("Collect") then
-                        -- Coletando o grift
-                        fireclickdetector(grift.Collect)
-                        debugMessage("Grift coletado com sucesso!")
-                    end
-                end
-            end
-            wait(3)  -- Intervalo de 3 segundos entre cada coleta
+-- Função para coletar a Raça Dragão Faixa 1
+local function collectDragonRaceFaixa1()
+    -- Verifica se a coleta para Faixa 1 está ativada
+    if getgenv().Collect_Dragon_Race_Faixa1 then
+        -- Lógica para interagir com o NPC da Faixa 1 e coletar
+        debugMessage("Coletando Faixa 1 da Raça Dragão...")
+        local npc = findNPC("Dragão Faixa 1")  -- Função fictícia que encontra o NPC da Faixa 1
+        if npc then
+            npc.interact()  -- Interage com o NPC
+            debugMessage("Faixa 1 coletada com sucesso!")
+        else
+            debugMessage("NPC da Faixa 1 não encontrado!")
         end
-    end)
+    end
 end
 
--- Função para Coletar Cards
-local function collectCards()
-    spawn(function()
-        while getgenv().Collect_Cards do
-            -- Lógica para coletar todos os cards disponíveis no jogo
-            for _, card in ipairs(game.Workspace.Cards:GetChildren()) do
-                if card:IsA("Model") then
-                    -- Verifica se o card pode ser coletado
-                    if card:FindFirstChild("Collect") then
-                        -- Coleta o card
-                        fireclickdetector(card.Collect)
-                        debugMessage("Card coletado com sucesso!")
-                    end
-                end
-            end
-            wait(4)  -- Intervalo de 4 segundos entre as coletas de cards
+-- Função para coletar a Raça Dragão Faixa 2
+local function collectDragonRaceFaixa2()
+    if getgenv().Collect_Dragon_Race_Faixa2 then
+        debugMessage("Coletando Faixa 2 da Raça Dragão...")
+        local npc = findNPC("Dragão Faixa 2")  -- Função fictícia que encontra o NPC da Faixa 2
+        if npc then
+            npc.interact()  -- Interage com o NPC
+            debugMessage("Faixa 2 coletada com sucesso!")
+        else
+            debugMessage("NPC da Faixa 2 não encontrado!")
         end
-    end)
+    end
 end
 
--- Função para Coletar a Nova Espada
-local function collectNewSword()
-    spawn(function()
-        while getgenv().Collect_New_Sword do
-            -- Lógica para coletar a nova espada
-            local sword = game.Workspace:FindFirstChild("NewSword")
-            if sword then
-                -- Verifica se a espada está disponível para coleta
-                if sword:FindFirstChild("Collect") then
-                    -- Coleta a espada
-                    fireclickdetector(sword.Collect)
-                    debugMessage("Nova espada coletada com sucesso!")
-                end
-            end
-            wait(5)  -- Intervalo de 5 segundos para a coleta
+-- Função para coletar a Raça Dragão Faixa 3
+local function collectDragonRaceFaixa3()
+    if getgenv().Collect_Dragon_Race_Faixa3 then
+        debugMessage("Coletando Faixa 3 da Raça Dragão...")
+        local npc = findNPC("Dragão Faixa 3")
+        if npc then
+            npc.interact()
+            debugMessage("Faixa 3 coletada com sucesso!")
+        else
+            debugMessage("NPC da Faixa 3 não encontrado!")
         end
-    end)
+    end
 end
 
--- Função para Coletar História da Arma Nova
-local function collectNewWeaponHistory()
-    spawn(function()
-        while getgenv().Collect_New_Weapon_History do
-            -- Lógica para coletar a história da nova arma
-            local weaponHistory = game.Workspace:FindFirstChild("NewWeaponHistory")
-            if weaponHistory then
-                -- Coleta a história da arma
-                fireclickdetector(weaponHistory.Collect)
-                debugMessage("História da nova arma coletada com sucesso!")
-            end
-            wait(6)  -- Intervalo de 6 segundos para a coleta
+-- Função para coletar a Raça Dragão Faixa 4
+local function collectDragonRaceFaixa4()
+    if getgenv().Collect_Dragon_Race_Faixa4 then
+        debugMessage("Coletando Faixa 4 da Raça Dragão...")
+        local npc = findNPC("Dragão Faixa 4")
+        if npc then
+            npc.interact()
+            debugMessage("Faixa 4 coletada com sucesso!")
+        else
+            debugMessage("NPC da Faixa 4 não encontrado!")
         end
-    end)
+    end
 end
 
--- Função para Pegar Raça Dragão em todas as faixas de nível
-local function collectDragonRace()
-    spawn(function()
-        while getgenv().Collect_Dragon_Race do
-            -- Lógica para pegar a raça dragão conforme o nível do jogador
-            local playerLevel = game.Players.LocalPlayer.Data.Level.Value
-            if playerLevel >= 50 and playerLevel <= 100 then
-                -- Lógica para pegar raça dragão entre nível 50 e 100
-                debugMessage("Coletando Raça Dragão para o nível " .. playerLevel)
-                -- Código para coleta da raça dragão
-            elseif playerLevel >= 100 and playerLevel <= 200 then
-                -- Lógica para pegar raça dragão entre nível 100 e 200
-                debugMessage("Coletando Raça Dragão para o nível " .. playerLevel)
-                -- Código para coleta da raça dragão
-            end
-            wait(10)  -- Intervalo de 10 segundos entre as tentativas de coleta
+-- Função para coletar a Raça Dragão Faixa 5
+local function collectDragonRaceFaixa5()
+    if getgenv().Collect_Dragon_Race_Faixa5 then
+        debugMessage("Coletando Faixa 5 da Raça Dragão...")
+        local npc = findNPC("Dragão Faixa 5")
+        if npc then
+            npc.interact()
+            debugMessage("Faixa 5 coletada com sucesso!")
+        else
+            debugMessage("NPC da Faixa 5 não encontrado!")
         end
-    end)
+    end
 end
 
--- Função para Farmar Chamas Vermelhas
-local function farmRedFlames()
-    spawn(function()
-        while getgenv().Farm_Red_Flames do
-            -- Lógica para farmar chamas vermelhas
-            for _, flame in ipairs(game.Workspace.RedFlames:GetChildren()) do
-                if flame:IsA("Model") then
-                    -- Verifica se a chama vermelha pode ser coletada
-                    if flame:FindFirstChild("Collect") then
-                        -- Coleta a chama vermelha
-                        fireclickdetector(flame.Collect)
-                        debugMessage("Chama vermelha coletada com sucesso!")
-                    end
-                end
-            end
-            wait(5)  -- Intervalo de 5 segundos entre as coletas
+-- Função para coletar a Raça Dragão Faixa 6
+local function collectDragonRaceFaixa6()
+    if getgenv().Collect_Dragon_Race_Faixa6 then
+        debugMessage("Coletando Faixa 6 da Raça Dragão...")
+        local npc = findNPC("Dragão Faixa 6")
+        if npc then
+            npc.interact()
+            debugMessage("Faixa 6 coletada com sucesso!")
+        else
+            debugMessage("NPC da Faixa 6 não encontrado!")
         end
-    end)
+    end
 end
 
--- Função para Ativar Auto Farm
-local function autoFarm()
-    spawn(function()
-        while getgenv().Auto_Farm do
-            -- Lógica para farmar inimigos ou coletar itens
-            debugMessage("Iniciando auto farm...")
-            -- Aqui entra a lógica do farm, seja para matar inimigos ou coletar recursos
-            wait(2)
-        end
-    end)
+-- Função para iniciar a coleta de todas as faixas da Raça Dragão
+local function startDragonRaceCollecting()
+    getgenv().Collect_Dragon_Race_Faixa1 = true
+    getgenv().Collect_Dragon_Race_Faixa2 = true
+    getgenv().Collect_Dragon_Race_Faixa3 = true
+    getgenv().Collect_Dragon_Race_Faixa4 = true
+    getgenv().Collect_Dragon_Race_Faixa5 = true
+    getgenv().Collect_Dragon_Race_Faixa6 = true
+
+    -- Inicia a coleta de todas as faixas da Raça Dragão
+    collectDragonRaceFaixa1()
+    collectDragonRaceFaixa2()
+    collectDragonRaceFaixa3()
+    collectDragonRaceFaixa4()
+    collectDragonRaceFaixa5()
+    collectDragonRaceFaixa6()
+
+    debugMessage("Coleta de todas as faixas da Raça Dragão iniciada!")
 end
 
--- Função para Ativar Auto Quest
-local function autoQuest()
-    spawn(function()
-        while getgenv().Auto_Quest do
-            -- Lógica para aceitar missões automaticamente
-            debugMessage("Aceitando missões automaticamente...")
-            -- Aqui entra a lógica para aceitar e completar missões
-            wait(5)
-        end
-    end)
+-- Função para parar a coleta de todas as faixas da Raça Dragão
+local function stopDragonRaceCollecting()
+    getgenv().Collect_Dragon_Race_Faixa1 = false
+    getgenv().Collect_Dragon_Race_Faixa2 = false
+    getgenv().Collect_Dragon_Race_Faixa3 = false
+    getgenv().Collect_Dragon_Race_Faixa4 = false
+    getgenv().Collect_Dragon_Race_Faixa5 = false
+    getgenv().Collect_Dragon_Race_Faixa6 = false
+
+    debugMessage("Coleta de todas as faixas da Raça Dragão parada!")
 end
 
--- Ativar funções com toggles no GUI
-FarmSection:NewToggle("Auto Farm", "Farmar inimigos automaticamente", function(state)
-    getgenv().Auto_Farm = state
-    if state then autoFarm() end
-end)
+-- Função para exibir mensagens de debug
+local function debugMessage(message)
+    print("[DEBUG] " .. message)  -- Imprime a mensagem de debug no console
+end
 
-FarmSection:NewToggle("Auto Quest", "Aceitar missões automaticamente", function(state)
-    getgenv().Auto_Quest = state
-    if state then autoQuest() end
-end)
+-- Função principal que começa a coleta de todas as faixas ou para dependendo da condição
+local function main()
+    -- Aqui você pode alternar entre começar ou parar a coleta conforme necessário
+    startDragonRaceCollecting()
+    wait(60)  -- Aguarda 1 minuto antes de parar a coleta
+    stopDragonRaceCollecting()
+end
 
-FarmSection:NewToggle("Coletar Grifts", "Coletar todos os Grifts", function(state)
-    getgenv().Collect_Grifts = state
-    if state then collectGrifts() end
-end)
-
-FarmSection:NewToggle("Coletar Cards", "Coletar todos os Cards", function(state)
-    getgenv().Collect_Cards = state
-    if state then collectCards() end
-end)
-
-FarmSection:NewToggle("Coletar Nova Espada", "Coletar a nova espada", function(state)
-    getgenv().Collect_New_Sword = state
-    if state then collectNewSword() end
-end)
-
-FarmSection:NewToggle("Coletar História da Arma Nova", "Coletar história da nova arma", function(state)
-    getgenv().Collect_New_Weapon_History = state
-    if state then collectNewWeaponHistory() end
-end)
-
-FarmSection:NewToggle("Coletar Raça Dragão", "Coletar Raça Dragão", function(state)
-    getgenv().Collect_Dragon_Race = state
-    if state then collectDragonRace() end
-end)
-
-FarmSection:NewToggle("Farmar Chamas Vermelhas", "Farmar chamas vermelhas", function(state)
-    getgenv().Farm_Red_Flames = state
-    if state then farmRedFlames() end
-end)
-
-debugMessage("Funções de coleta e farm configuradas com sucesso!")
+-- Chama a função principal
+main()
