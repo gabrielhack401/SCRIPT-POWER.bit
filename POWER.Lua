@@ -213,54 +213,172 @@ local function enableInfiniteStamina()
     spawn(function()
         while getgenv().Infinite_Stamina do
             local player = game.Players.LocalPlayer
-            if player.Character and player.Character:FindFirstChild("Energy") then\n                player.Character.Energy.Value = math.huge\n                debugMessage(\"Stamina infinita ativada.\")\n            end\n            wait(1)\n        end\n    end)\nend
+            if player.Character and player.Character:FindFirstChild("Energy") then
+                player.Character.Energy.Value = math.huge
+                debugMessage("Stamina infinita ativada.")
+            end
+            wait(1)
+        end
+    end)
+end
 
-local function trackBerrys()\n    spawn(function()\n        while getgenv().Track_Berrys do\n            for _, berry in pairs(workspace:GetChildren()) do\n                if berry:IsA(\"Part\") and berry.Name == \"Berry\" then\n                    debugMessage(\"Berry encontrada em: \" .. tostring(berry.Position))\n                end\n            end\n            wait(5)\n        end\n    end)\nend
+local function trackBerrys()
+    spawn(function()
+        while getgenv().Track_Berrys do
+            for _, berry in pairs(workspace:GetChildren()) do
+                if berry:IsA("Part") and berry.Name == "Berry" then
+                    debugMessage("Berry encontrada em: " .. tostring(berry.Position))
+                end
+            end
+            wait(5)
+        end
+    end)
+end
 
-local function updateCompass()\n    spawn(function()\n        while true do\n            local playerPos = game.Players.LocalPlayer.Character.HumanoidRootPart.Position\n            local nearestBerry = nil\n            local minDist = math.huge\n            for _, berry in pairs(workspace:GetChildren()) do\n                if berry:IsA(\"Part\") and berry.Name == \"Berry\" then\n                    local dist = (berry.Position - playerPos).magnitude\n                    if dist < minDist then\n                        minDist = dist\n                        nearestBerry = berry\n                    end\n                end\n            end\n            if nearestBerry then\n                local direction = (nearestBerry.Position - playerPos).unit\n                debugMessage(\"Bússola: Direção para o Berry: \" .. tostring(direction))\n            end\n            wait(2)\n        end\n    end)\nend
+local function updateCompass()
+    spawn(function()
+        while true do
+            local playerPos = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+            local nearestBerry = nil
+            local minDist = math.huge
+            for _, berry in pairs(workspace:GetChildren()) do
+                if berry:IsA("Part") and berry.Name == "Berry" then
+                    local dist = (berry.Position - playerPos).magnitude
+                    if dist < minDist then
+                        minDist = dist
+                        nearestBerry = berry
+                    end
+                end
+            end
+            if nearestBerry then
+                local direction = (nearestBerry.Position - playerPos).unit
+                debugMessage("Bússola: Direção para o Berry: " .. tostring(direction))
+            end
+            wait(2)
+        end
+    end)
+end
 
-local function autoKitsuneRaidLaw()\n    spawn(function()\n        while getgenv().Kitsune_Raid_Law do\n            local lawPortal = workspace:FindFirstChild(\"LawPortal\")\n            if lawPortal then\n                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = lawPortal.CFrame\n                debugMessage(\"Iniciando Kitsune Raid Law...\")\n                game.ReplicatedStorage.Events.Raid:FireServer(\"Start\", \"Law\")\n            end\n            wait(10)\n        end\n    end)\nend
+local function autoKitsuneRaidLaw()
+    spawn(function()
+        while getgenv().Kitsune_Raid_Law do
+            local lawPortal = workspace:FindFirstChild("LawPortal")
+            if lawPortal then
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = lawPortal.CFrame
+                debugMessage("Iniciando Kitsune Raid Law...")
+                game.ReplicatedStorage.Events.Raid:FireServer("Start", "Law")
+            end
+            wait(10)
+        end
+    end)
+end
 
-local function autoXeroHub()\n    spawn(function()\n        while getgenv().Auto_XeroHub do\n            debugMessage(\"Executando funções do Xero Hub...\")\n            wait(5)\n        end\n    end)\nend
+local function autoXeroHub()
+    spawn(function()
+        while getgenv().Auto_XeroHub do
+            debugMessage("Executando funções do Xero Hub...")
+            wait(5)
+        end
+    end)
+end
 
-local function autoRedzHub()\n    spawn(function()\n        while getgenv().Auto_RedzHub do\n            debugMessage(\"Executando funções do Redz Hub...\")\n            wait(5)\n        end\n    end)\nend
+local function autoRedzHub()
+    spawn(function()
+        while getgenv().Auto_RedzHub do
+            debugMessage("Executando funções do Redz Hub...")
+            wait(5)
+        end
+    end)
+end
 
 -- Integração com o Menu
-FarmSection:NewToggle(\"Auto Farm\", \"Farmar inimigos automaticamente\", function(state)\n    getgenv().Auto_Farm = state\n    if state then spawn(autoFarm) end\nend)
+FarmSection:NewToggle("Auto Farm", "Farmar inimigos automaticamente", function(state)
+    getgenv().Auto_Farm = state
+    if state then spawn(autoFarm) end
+end)
 
-FarmSection:NewToggle(\"Auto Quest\", \"Aceitar missões automaticamente\", function(state)\n    getgenv().Auto_Quest = state\n    if state then spawn(autoQuest) end\nend)
+FarmSection:NewToggle("Auto Quest", "Aceitar missões automaticamente", function(state)
+    getgenv().Auto_Quest = state
+    if state then spawn(autoQuest) end
+end)
 
-FarmSection:NewToggle(\"Farm Dragon Race\", \"Farmar para raça Dragão\", function(state)\n    getgenv().Farm_Dragon_Race = state\n    if state then spawn(farmDragonRace) end\nend)
+FarmSection:NewToggle("Farm Dragon Race", "Farmar para raça Dragão", function(state)
+    getgenv().Farm_Dragon_Race = state
+    if state then spawn(farmDragonRace) end
+end)
 
-StatsSection:NewToggle(\"Auto Upgrade Stats\", \"Melhorar atributos automaticamente\", function(state)\n    getgenv().Auto_Upgrade_Stats = state\n    if state then spawn(autoUpgradeStats) end\nend)
+StatsSection:NewToggle("Auto Upgrade Stats", "Melhorar atributos automaticamente", function(state)
+    getgenv().Auto_Upgrade_Stats = state
+    if state then spawn(autoUpgradeStats) end
+end)
 
-SettingsSection:NewToggle(\"Auto Buso\", \"Ativar Busoshoku Haki automaticamente\", function(state)\n    getgenv().Auto_Buso = state\n    if state then spawn(autoBuso) end\nend)
+SettingsSection:NewToggle("Auto Buso", "Ativar Busoshoku Haki automaticamente", function(state)
+    getgenv().Auto_Buso = state
+    if state then spawn(autoBuso) end
+end)
 
-SettingsSection:NewToggle(\"Auto Instinto\", \"Ativar Instinto automaticamente\", function(state)\n    getgenv().Auto_Instinto = state\n    if state then spawn(autoInstinto) end\nend)
+SettingsSection:NewToggle("Auto Instinto", "Ativar Instinto automaticamente", function(state)
+    getgenv().Auto_Instinto = state
+    if state then spawn(autoInstinto) end
+end)
 
-SettingsSection:NewToggle(\"Auto Click\", \"Ativar Auto Click\", function(state)\n    getgenv().Auto_Click = state\n    if state then spawn(autoClick) end\nend)
+SettingsSection:NewToggle("Auto Click", "Ativar Auto Click", function(state)
+    getgenv().Auto_Click = state
+    if state then spawn(autoClick) end
+end)
 
-SettingsSection:NewToggle(\"Auto Ability\", \"Usar habilidades automaticamente\", function(state)\n    getgenv().Auto_Ability = state\n    if state then spawn(autoAbility) end\nend)
+SettingsSection:NewToggle("Auto Ability", "Usar habilidades automaticamente", function(state)
+    getgenv().Auto_Ability = state
+    if state then spawn(autoAbility) end
+end)
 
-SettingsSection:NewToggle(\"Auto Dungeon\", \"Entrar no Dungeon automaticamente\", function(state)\n    getgenv().Auto_Dungeon = state\n    if state then spawn(autoDungeon) end\nend)
+SettingsSection:NewToggle("Auto Dungeon", "Entrar no Dungeon automaticamente", function(state)
+    getgenv().Auto_Dungeon = state
+    if state then spawn(autoDungeon) end
+end)
 
-SettingsSection:NewToggle(\"Auto Train\", \"Treinar automaticamente\", function(state)\n    getgenv().Auto_Train = state\n    if state then spawn(autoTrain) end\nend)
+SettingsSection:NewToggle("Auto Train", "Treinar automaticamente", function(state)
+    getgenv().Auto_Train = state
+    if state then spawn(autoTrain) end
+end)
 
-SettingsSection:NewToggle(\"Vida Infinita\", \"Ativar vida infinita\", function(state)\n    getgenv().Infinite_Life = state\n    if state then spawn(enableInfiniteLife) end\nend)
+SettingsSection:NewToggle("Vida Infinita", "Ativar vida infinita", function(state)
+    getgenv().Infinite_Life = state
+    if state then spawn(enableInfiniteLife) end
+end)
 
-SettingsSection:NewToggle(\"Stamina Infinita\", \"Ativar stamina infinita\", function(state)\n    getgenv().Infinite_Stamina = state\n    if state then spawn(enableInfiniteStamina) end\nend)
+SettingsSection:NewToggle("Stamina Infinita", "Ativar stamina infinita", function(state)
+    getgenv().Infinite_Stamina = state
+    if state then spawn(enableInfiniteStamina) end
+end)
 
-SettingsSection:NewToggle(\"Track Berrys\", \"Mostrar localização das Berrys em tempo real\", function(state)\n    getgenv().Track_Berrys = state\n    if state then spawn(trackBerrys) spawn(updateCompass) end\nend)
+SettingsSection:NewToggle("Track Berrys", "Mostrar localização das Berrys em tempo real", function(state)
+    getgenv().Track_Berrys = state
+    if state then spawn(trackBerrys) spawn(updateCompass) end
+end)
 
-SettingsSection:NewToggle(\"Kitsune Raid Law\", \"Ativar Kitsune Raid Law (Second Sea)\", function(state)\n    getgenv().Kitsune_Raid_Law = state\n    if state then spawn(autoKitsuneRaidLaw) end\nend)
+SettingsSection:NewToggle("Kitsune Raid Law", "Ativar Kitsune Raid Law (Second Sea)", function(state)
+    getgenv().Kitsune_Raid_Law = state
+    if state then spawn(autoKitsuneRaidLaw) end
+end)
 
-SettingsSection:NewToggle(\"Auto Xero Hub\", \"Executar funções do Xero Hub\", function(state)\n    getgenv().Auto_XeroHub = state\n    if state then spawn(autoXeroHub) end\nend)
+SettingsSection:NewToggle("Auto Xero Hub", "Executar funções do Xero Hub", function(state)
+    getgenv().Auto_XeroHub = state
+    if state then spawn(autoXeroHub) end
+end)
 
-SettingsSection:NewToggle(\"Auto Redz Hub\", \"Executar funções do Redz Hub\", function(state)\n    getgenv().Auto_RedzHub = state\n    if state then spawn(autoRedzHub) end\nend)
+SettingsSection:NewToggle("Auto Redz Hub", "Executar funções do Redz Hub", function(state)
+    getgenv().Auto_RedzHub = state
+    if state then spawn(autoRedzHub) end
+end)
 
 -- Adicionando Teleporte no Menu
-TeleportSection:NewButton(\"Teleporte para Starter Island\", \"Teleportar para a Ilha Starter\", function()\n    teleportToIsland(\"Starter Island\")\nend)
+TeleportSection:NewButton("Teleporte para Starter Island", "Teleportar para a Ilha Starter", function()
+    teleportToIsland("Starter Island")
+end)
 
-TeleportSection:NewButton(\"Teleporte para Snow Island\", \"Teleportar para a Ilha Snow\", function()\n    teleportToIsland(\"Snow Island\")\nend)
+TeleportSection:NewButton("Teleporte para Snow Island", "Teleportar para a Ilha Snow", function()
+    teleportToIsland("Snow Island")
+end)
 
-debugMessage(\"Script e menu inicializados com sucesso!\")"}
+debugMessage("Script e menu inicializados com sucesso!")
