@@ -381,4 +381,29 @@ TeleportSection:NewButton("Teleporte para Snow Island", "Teleportar para a Ilha 
     teleportToIsland("Snow Island")
 end)
 
+-- Adicionando mais ilhas ao menu de teleporte
+TeleportSection:NewButton("Teleporte para Middle Island", "Teleportar para a Ilha Middle", function()
+    teleportToIsland("Middle Island")
+end)
+
+TeleportSection:NewButton("Teleporte para Sky Island", "Teleportar para a Ilha Sky", function()
+    teleportToIsland("Sky Island")
+end)
+
+TeleportSection:NewButton("Teleporte para Underwater Island", "Teleportar para a Ilha Underwater", function()
+    teleportToIsland("Underwater Island")
+end)
+
+TeleportSection:NewButton("Teleporte para Dragon Tail Island", "Teleportar para a Ilha Dragon Tail", function()
+    teleportToIsland("Dragon Tail Island")
+end)
+
+TeleportSection:NewButton("Teleporte para Gas Island", "Teleportar para a Ilha Gas", function()
+    teleportToIsland("Gas Island")
+end)
+
+TeleportSection:NewButton("Teleporte para Final Sea Island", "Teleportar para a Ilha Final Sea", function()
+    teleportToIsland("Final Sea Island")
+end)
+
 debugMessage("Script e menu inicializados com sucesso!")
