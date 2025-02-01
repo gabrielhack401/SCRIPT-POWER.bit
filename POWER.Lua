@@ -407,3 +407,93 @@ TeleportSection:NewButton("Teleporte para Final Sea Island", "Teleportar para a 
 end)
 
 debugMessage("Script e menu inicializados com sucesso!")
+-- Services
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local VirtualUser = game:GetService("VirtualUser")
+
+-- Main Variables
+local Player = Players.LocalPlayer
+local Character = Player.Character or Player.CharacterAdded:Wait()
+local HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
+local AttackRange = 50
+
+-- GUI Framework
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+local Window = Library.CreateLib("Complete Blox Fruits", "DarkTheme")
+
+-- Settings
+getgenv().AutoAttack = false
+getgenv().AutoFarm = false
+getgenv().AutoQuest = false
+getgenv().AutoUpgrade = false
+getgenv().SafeMode = true
+
+-- Core Functions
+local function GetClosestTarget()
+    local ClosestDistance = math.huge
+    local Target = nil
+    
+    for _, Enemy in pairs(workspace.Enemies:GetChildren()) do
+        if Enemy:FindFirstChild("HumanoidRootPart") and Enemy:FindFirstChild("Humanoid") 
+            and Enemy.Humanoid.Health > 0 then
+            local Distance = (HumanoidRootPart.Position - Enemy.HumanoidRootPart.Position).Magnitude
+            if Distance < ClosestDistance and Distance < AttackRange then
+                ClosestDistance = Distance
+                Target = Enemy
+            end
+        end
+    end
+    return Target
+end
+
+-- Combat System
+local function AutoAttack()
+    spawn(function()
+        while getgenv().AutoAttack do
+            local Target = GetClosestTarget()
+            if Target then
+                HumanoidRootPart.CFrame = Target.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
+                VirtualUser:CaptureController()
+                VirtualUser:ClickButton1(Vector2.new())
+            end
+            wait(0.1)
+        end
+    end)
+end
+
+-- Auto Farm System
+local function AutoFarm()
+    spawn(function()
+        while getgenv().AutoFarm do
+            local Target = GetClosestTarget()
+            if Target then
+                HumanoidRootPart.CFrame = Target.HumanoidRootPart.CFrame * CFrame.new(0, 15, 0)
+                wait(0.2)
+            end
+            wait(1)
+        end
+    end)
+end
+
+-- GUI Elements
+local CombatTab = Window:NewTab("Combat")
+local CombatSection = CombatSection:NewSection("Combat Options")
+
+CombatSection:NewToggle("Auto Attack", "Automatically attacks nearest enemy", function(state)
+    getgenv().AutoAttack = state
+    if state then AutoAttack() end
+end)
+
+CombatSection:NewToggle("Auto Farm", "Automatically farms enemies", function(state)
+    getgenv().AutoFarm = state
+    if state then AutoFarm() end
+end)
+
+CombatSection:NewSlider("Attack Range", "Adjust attack range", 100, 10, function(value)
+    AttackRange = value
+end)
+
+-- Initialize
+print("Complete Blox Fruits Script Loaded!")
